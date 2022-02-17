@@ -7,7 +7,7 @@ public class MyContext : DbContext
 
 	public MyContext(DbContextOptions<MyContext> options) : base(options) {}
 
-	public DbSet<Contact>? Contacts { get; set; }
+	public DbSet<Contact> Contacts => Set<Contact>();
 
 }
 
