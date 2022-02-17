@@ -30,6 +30,7 @@
 		  <PackagePath>\</PackagePath>
 		</None>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
 	<ItemGroup>
