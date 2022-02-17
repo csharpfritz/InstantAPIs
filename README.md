@@ -3,6 +3,9 @@ A proof-of-concept library that generates Minimal API endpoints for an Entity Fr
 
 [![Nuget](https://img.shields.io/nuget/v/Fritz.InstantAPIs)](https://www.nuget.org/packages/Fritz.InstantAPIs/)
 ![GitHub branch checks state](https://img.shields.io/github/checks-status/csharpfritz/InstantAPIs/main)
+![GitHub last commit](https://img.shields.io/github/last-commit/csharpfritz/InstantAPIs)
+![GitHub contributors](https://img.shields.io/github/contributors/csharpfritz/InstantAPIs)
+
 
 For a given Entity Framework context, MyContext
 
