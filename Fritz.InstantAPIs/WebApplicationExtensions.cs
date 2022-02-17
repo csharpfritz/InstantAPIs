@@ -7,10 +7,10 @@ public static class WebApplicationExtensions
 
 	public static InstantAPIsConfig Configuration { get; set; } = new();
 
-	public static WebApplication MapInstantAPIs<D>(this WebApplication app, Func<InstantAPIsConfig> configAction = null) where D: DbContext
+	public static WebApplication MapInstantAPIs<D>(this WebApplication app, Action<InstantAPIsConfig> configAction = null) where D: DbContext
 	{
 
-		Configuration = configAction != null ? configAction() : new();
+		if (configAction != null) configAction(Configuration);
 
 		// Get the tables on the DbContext
 		var dbTables = typeof(D).GetProperties(BindingFlags.Instance | BindingFlags.Public)

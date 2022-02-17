@@ -9,6 +9,12 @@ builder.Services.AddDbContext<MyContext>(
 
 var app = builder.Build();
 
-app.MapInstantAPIs<MyContext>();
+app.MapInstantAPIs<MyContext>(config =>
+{
+	// Potential new config API
+	// config.Include(ctx => ctx.Contacts)
+	//	 .GenerateMethods(ApiMethodsToGenerate.All);
+
+});
 
 app.Run();
