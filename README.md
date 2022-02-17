@@ -6,11 +6,9 @@ For a given Entity Framework context, MyContext
 ```csharp
 public class MyContext : DbContext 
 {
+    public MyContext(DbContextOptions<MyContext> options) : base(options) {}
 
-	public MyContext(DbContextOptions<MyContext> options) : base(options) {}
-
-	public DbSet<Contact>? Contacts { get; set; }
-
+    public DbSet<Contact>? Contacts { get; set; }
 }
 ```
 
