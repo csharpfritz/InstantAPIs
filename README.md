@@ -6,11 +6,9 @@ For a given Entity Framework context, MyContext
 ```csharp
 public class MyContext : DbContext 
 {
+    public MyContext(DbContextOptions<MyContext> options) : base(options) {}
 
-	public MyContext(DbContextOptions<MyContext> options) : base(options) {}
-
-	public DbSet<Contact>? Contacts { get; set; }
-
+    public DbSet<Contact>? Contacts { get; set; }
 }
 ```
 
@@ -19,9 +17,7 @@ We can generate all of the standard CRUD API endpoints using this syntax in `Pro
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<MyContext>(
-  options => options.UseSqlite("Data Source=contacts.db")
-);
+builder.Services.AddSqlite<MyContext>("Data Source=contacts.db");
 
 var app = builder.Build();
 
