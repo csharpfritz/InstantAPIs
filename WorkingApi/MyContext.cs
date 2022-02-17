@@ -4,7 +4,10 @@ namespace WorkingApi;
 
 public class MyContext : DbContext 
 {
+	public MyContext()
+	{
 
+	}
 	public MyContext(DbContextOptions<MyContext> options) : base(options) {}
 
 	public DbSet<Contact>? Contacts { get; set; }
