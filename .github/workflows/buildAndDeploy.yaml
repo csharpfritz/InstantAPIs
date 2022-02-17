@@ -1,16 +1,8 @@
-name: "Build"
+name: "Build and Deploy"
 
 on:
   push:
     branches:
-      - main
-    paths-ignore:
-      - '**/*.md'
-      - '**/*.gitignore'
-      - '**/*.gitattributes'
-  pull_request:
-    branches:
-      - main
       - release
     paths-ignore:
       - '**/*.md'
@@ -18,7 +10,6 @@ on:
       - '**/*.gitattributes'
   workflow_dispatch:
     branches:
-      - main
       - release
     paths-ignore:
       - '**/*.md'
@@ -75,3 +66,15 @@ jobs:
         $relnotes=$nuspec.project.propertygroup.packagereleasenotes
         echo "PKG_VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
         echo "RELNOTES=$relnotes" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+
+    - name: Push to NuGet
+      run: dotnet nuget push **/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+
+    - name: Tag and Release
+      id: tag_release
+      uses: softprops/action-gh-release@v0.1.13
+      with:
+        body: ${{ env.RELNOTES }}
+        tag_name: ${{ env.PKG_VERSION }}
+        files: |
+          **/*.nupkg
