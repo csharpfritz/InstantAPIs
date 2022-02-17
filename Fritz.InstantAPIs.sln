@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkingApi", "WorkingApi\WorkingApi.csproj", "{67B3C4BF-3F0F-4179-8B43-008F0B18761A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fritz.InstantAPIs", "Fritz.InstantAPIs\Fritz.InstantAPIs.csproj", "{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{67B3C4BF-3F0F-4179-8B43-008F0B18761A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B3C4BF-3F0F-4179-8B43-008F0B18761A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67B3C4BF-3F0F-4179-8B43-008F0B18761A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67B3C4BF-3F0F-4179-8B43-008F0B18761A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
