@@ -1,4 +1,4 @@
-global using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WorkingApi;
 
 var builder = WebApplication.CreateBuilder(args);

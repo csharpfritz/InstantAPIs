@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace WorkingApi;
 
 public class MyContext : DbContext 
