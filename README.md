@@ -38,4 +38,6 @@ TODO:
 - Add Put method
 - Add Delete method
 - Add OpenAPI bindings
+- GraphQL?
+- Add gRPC bindings
 - Authorization?
