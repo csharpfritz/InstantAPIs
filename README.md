@@ -34,9 +34,7 @@ Now we can navigate to `/api/Contacts` and see all of the Contacts in the databa
 
 TODO:
 
-- Add GetById method
 - Add Put method
-- Add Delete method
 - Add OpenAPI bindings
 - GraphQL?
 - Add gRPC bindings
