@@ -61,7 +61,19 @@ internal class MapApiExtensions
 
 	}
 
-	// TODO: MapInstantPut()
+	internal static void MapInstantPut<D, C>(WebApplication app, string url)
+		where D : DbContext where C : class
+	{
+
+
+		app.MapPut($"{url}/{{id}}", async ([FromServices] D db, [FromRoute] string id, [FromBody] C newObj) =>
+		{
+			db.Set<C>().Attach(newObj);
+			db.Entry(newObj).State = EntityState.Modified;
+			await db.SaveChangesAsync();
+		});
+
+	}
 
 	internal static void MapDeleteById<D, C>(WebApplication app, string url)
 		where D : DbContext where C : class
