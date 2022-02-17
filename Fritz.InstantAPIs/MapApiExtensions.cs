@@ -85,7 +85,7 @@ internal class MapApiExtensions
 
 		if (idProp == null) return;
 
-		app.MapGet($"{url}/{{id}}", async ([FromServices] D db, [FromRoute] string id) =>
+		app.MapDelete($"{url}/{{id}}", async ([FromServices] D db, [FromRoute] string id) =>
 		{
 
 			var set = db.Set<C>();
