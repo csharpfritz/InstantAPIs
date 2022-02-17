@@ -56,7 +56,7 @@ jobs:
       run: dotnet test
 
     - name: Pack
-      run: dotnet pack Fritz.InstantAPIs\Fritz.InstantAPIs.csproj --configuration Release -o finalpackage --no-build
+      run: dotnet pack Fritz.InstantAPIs/Fritz.InstantAPIs.csproj --configuration Release -o finalpackage --no-build
 
     - name: Publish artifact
       uses: actions/upload-artifact@master
@@ -68,7 +68,7 @@ jobs:
       id: set_proj_version
       shell: pwsh
       run: |
-        [xml]$nuspec = Get-Content Fritz.InstantAPIs\Fritz.InstantAPIs.csproj
+        [xml]$nuspec = Get-Content Fritz.InstantAPIs/Fritz.InstantAPIs.csproj
         $version=$nuspec.project.propertygroup.version
         $relnotes=$nuspec.project.propertygroup.packagereleasenotes
         echo "PKG_VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
