@@ -1,19 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32216.311
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkingApi", "WorkingApi\WorkingApi.csproj", "{67B3C4BF-3F0F-4179-8B43-008F0B18761A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkingApi", "WorkingApi\WorkingApi.csproj", "{67B3C4BF-3F0F-4179-8B43-008F0B18761A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fritz.InstantAPIs", "Fritz.InstantAPIs\Fritz.InstantAPIs.csproj", "{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fritz.InstantAPIs", "Fritz.InstantAPIs\Fritz.InstantAPIs.csproj", "{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{CDEC8FD4-C50A-4FCA-BF93-6C7AA3F24BB4}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yaml = .github\workflows\build.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{67B3C4BF-3F0F-4179-8B43-008F0B18761A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,5 +26,11 @@ Global
 		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E620812-0D88-48B8-A69F-578CBE43C457}
 	EndGlobalSection
 EndGlobal
