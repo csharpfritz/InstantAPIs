@@ -30,13 +30,11 @@ app.MapInstantAPIs<MyContext>();
 app.Run();
 ```
 
-Now we can navigate to `/api/Contacts` and see all of the Contacts in the database.  We can post to `/api/Contacts` and add a new Contact to the database.
+Now we can navigate to `/api/Contacts` and see all of the Contacts in the database.  We can filter for a specific Contact by navigating to `/api/Contacts/1` to get just the first contact returned.  We can also post to `/api/Contacts` and add a new Contact to the database.
 
 TODO:
 
-- Add GetById method
 - Add Put method
-- Add Delete method
 - Add OpenAPI bindings
 - GraphQL?
 - Add gRPC bindings
