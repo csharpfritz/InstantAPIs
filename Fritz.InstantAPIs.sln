@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{
 		.github\workflows\build.yaml = .github\workflows\build.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fritz.InstantAPIs.Generators", "Fritz.InstantAPIs.Generators\Fritz.InstantAPIs.Generators.csproj", "{56ABEEC4-77C0-42CE-A68B-592E4705D90E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fritz.InstantAPIs.Generators.Tests", "Fritz.InstantAPIs.Generators.Tests\Fritz.InstantAPIs.Generators.Tests.csproj", "{EE295501-1A67-4E55-A1AD-B98C290F604D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +30,14 @@ Global
 		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56ABEEC4-77C0-42CE-A68B-592E4705D90E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56ABEEC4-77C0-42CE-A68B-592E4705D90E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56ABEEC4-77C0-42CE-A68B-592E4705D90E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56ABEEC4-77C0-42CE-A68B-592E4705D90E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE295501-1A67-4E55-A1AD-B98C290F604D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE295501-1A67-4E55-A1AD-B98C290F604D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE295501-1A67-4E55-A1AD-B98C290F604D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE295501-1A67-4E55-A1AD-B98C290F604D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
