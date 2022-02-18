@@ -17,7 +17,6 @@ namespace Fritz.InstantAPIs.Generators
 		private static SourceText? Build(INamedTypeSymbol type)
 		{
 			var tables = new List<TableData>();
-			var isIdKeyAttribute = false;
 
 			foreach(var property in type.GetMembers().OfType<IPropertySymbol>()
 				.Where(_ => !_.IsStatic && _.DeclaredAccessibility == Accessibility.Public &&
@@ -26,7 +25,6 @@ namespace Fritz.InstantAPIs.Generators
 				var propertyType = (INamedTypeSymbol)property.Type;
 				var propertySetType = (INamedTypeSymbol)propertyType.TypeArguments.First()!;
 
-				// TODO: KeyAttribute alternative.
 				var idProperty = propertySetType.GetMembers().OfType<IPropertySymbol>()
 					.FirstOrDefault(_ => string.Equals(_.Name, "id", StringComparison.OrdinalIgnoreCase) &&
 						!_.IsStatic && _.DeclaredAccessibility == Accessibility.Public);
@@ -35,7 +33,6 @@ namespace Fritz.InstantAPIs.Generators
 				{
 					idProperty = propertySetType.GetMembers().OfType<IPropertySymbol>()
 						.FirstOrDefault(_ => _.GetAttributes().Any(_ => _.AttributeClass!.Name == "Key" || _.AttributeClass.Name == "KeyAttribute"));
-					isIdKeyAttribute = idProperty is not null;
 				}
 
 				tables.Add(new TableData(property.Name, propertySetType, idProperty?.Type as INamedTypeSymbol));
