@@ -39,10 +39,3 @@ Now we can navigate to `/api/Contacts` and see all of the Contacts in the databa
 ## Community
 
 This project is covered by a [code of conduct](https://github.com/csharpfritz/InstantAPIs/blob/main/CODE-OF-CONDUCT.md) that all contributors must abide by.  [Contributions are welcome and encouraged.](https://github.com/csharpfritz/InstantAPIs/blob/main/CONTRIBUTING.md).
-
-TODO:
-
-- Add OpenAPI bindings
-- GraphQL?
-- Add gRPC bindings
-- Authorization?
