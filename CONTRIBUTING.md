@@ -20,7 +20,10 @@ We have adopted a [code of conduct](https://github.com/csharpfritz/InstantAPIs/b
 
 ## What should I know before I get started?
 
-This project is currently a proof-of-concept library that generates Minimal API endpoints for an Entity Framework context.
+This project is currently a proof-of-concept library that generates Minimal API endpoints for an Entity Framework context.  You should be
+familiar with C# 10, .NET 6, ASP.NET Core, and Entity Framework Core.  Reflection and Source Generators are a plus as this project will use those 
+.NET features to generate HTTP APIs.
+
 ### Project Folder Structure
 
 The folders are a basic structure which will change as needed to support the project as it grows.  The folders are configured as follows:
@@ -28,13 +31,17 @@ The folders are a basic structure which will change as needed to support the pro
 ```
 
   Fritz.InstantAPIs               The project code.
-  WorkingApi                      The project to test the functionality being developed.
+  WorkingApi                      The project to prototype and manually test the functionality being developed.
 
 ```
 
 ### Design Decisions
 
 Design for this project is ultimately decided by the project lead, [Jeff Fritz](https://github.com/csharpfritz).  The following project tenets are adhered to when making decisions:
+
+1. This is a library to help make the simple API endpoints that every project needs.
+1. This library is not intended to generate more complex API endpoints.
+1. This toolset should help users to deliver APIs with .NET on any and all ASP.NET Core supported platforms
 
 ## How can I contribute?
 
