@@ -45,8 +45,10 @@ namespace Fritz.InstantAPIs.Generators
 
 				var namespaces = new NamespaceGatherer();
 				namespaces.Add("System");
+				namespaces.Add("Fritz.InstantAPIs.Generators.Helpers");
 				namespaces.Add("Microsoft.EntityFrameworkCore");
 				namespaces.Add("Microsoft.AspNetCore.Builder");
+				namespaces.Add("Microsoft.AspNetCore.Mvc");
 
 				if (!type.ContainingNamespace.IsGlobalNamespace)
 				{
@@ -59,11 +61,12 @@ namespace Fritz.InstantAPIs.Generators
 				indentWriter.WriteLine("{");
 				indentWriter.Indent++;
 
-				namespaces.Add("Microsoft.AspNetCore.Builder");
-				indentWriter.WriteLine($"public static WebApplication Map{type.Name}ToAPIs(this WebApplication app)");
+				indentWriter.WriteLine($"public static WebApplication Map{type.Name}ToAPIs(this WebApplication app, InstanceAPIGeneratorConfig? configuration = null)");
 
 				indentWriter.WriteLine("{");
 				indentWriter.Indent++;
+
+				indentWriter.WriteLine("if(configuration is null) { configuration = InstanceAPIGeneratorConfig.Default; }");
 
 				foreach(var table in tables)
 				{
@@ -72,17 +75,27 @@ namespace Fritz.InstantAPIs.Generators
 						namespaces.Add(table.PropertyType.ContainingNamespace);
 					}
 
-					namespaces.Add("Microsoft.AspNetCore.Mvc");
+					indentWriter.WriteLine();
+					indentWriter.WriteLine("if(configuration.ShouldGetAll)");
+					indentWriter.WriteLine("{");
+					indentWriter.Indent++;
 
-					indentWriter.WriteLine($"app.MapGet(\"/api/{table.Name}\", ([FromServices] {type.Name} db) =>");
+					indentWriter.WriteLine($"app.MapGet(configuration.GetRoute(\"{table.Name}\"), ([FromServices] {type.Name} db) =>");
 					indentWriter.Indent++;
 					indentWriter.WriteLine($"db.Set<{table.PropertyType.Name}>());");
 					indentWriter.Indent--;
 
-					if(table.IdType is not null)
+					indentWriter.Indent--;
+					indentWriter.WriteLine("}");
+
+					if (table.IdType is not null)
 					{
 						indentWriter.WriteLine();
-						indentWriter.WriteLine($"app.MapGet(\"/api/{table.Name}/{{id}}\", async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
+						indentWriter.WriteLine("if(configuration.ShouldGetById)");
+						indentWriter.WriteLine("{");
+						indentWriter.Indent++;
+
+						indentWriter.WriteLine($"app.MapGet(configuration.GetRouteById(\"{table.Name}\"), async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
 						indentWriter.Indent++;
 
 						var idValue = "id";
@@ -103,6 +116,9 @@ namespace Fritz.InstantAPIs.Generators
 
 						indentWriter.WriteLine($"await db.Set<{table.PropertyType.Name}>().FindAsync({idValue}));");
 						indentWriter.Indent--;
+
+						indentWriter.Indent--;
+						indentWriter.WriteLine("}");
 					}
 				}
 

@@ -21,6 +21,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\Fritz.InstantAPIs.Generators.Helpers\Fritz.InstantAPIs.Generators.Helpers.csproj" />
 		<ProjectReference Include="..\Fritz.InstantAPIs.Generators\Fritz.InstantAPIs.Generators.csproj" />
 	</ItemGroup>
 </Project>

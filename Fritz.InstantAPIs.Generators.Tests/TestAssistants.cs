@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Fritz.InstantAPIs.Generators.Helpers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,7 @@ namespace Fritz.InstantAPIs.Generators.Tests
 			test.TestState.AdditionalReferences.Add(typeof(IApplicationBuilder).Assembly);
 			test.TestState.AdditionalReferences.Add(typeof(IHost).Assembly);
 			test.TestState.AdditionalReferences.Add(typeof(KeyAttribute).Assembly);
+			test.TestState.AdditionalReferences.Add(typeof(InstanceAPIGeneratorConfig).Assembly);
 			test.TestState.ExpectedDiagnostics.AddRange(expectedDiagnostics);
 			await test.RunAsync().ConfigureAwait(false);
 		}

@@ -33,7 +33,8 @@ namespace MyApplication
 	}}
 }}";
 			var generatedCode =
-$@"using Microsoft.AspNetCore.Builder;
+$@"using Fritz.InstantAPIs.Generators.Helpers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -44,13 +45,21 @@ namespace MyApplication
 {{
 	public static partial class WebApplicationExtensions
 	{{
-		public static WebApplication MapCustomerContextToAPIs(this WebApplication app)
+		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig? configuration = null)
 		{{
-			app.MapGet(""/api/Contacts"", ([FromServices] CustomerContext db) =>
-				db.Set<Contact>());
+			if(configuration is null) {{ configuration = InstanceAPIGeneratorConfig.Default; }}
 			
-			app.MapGet(""/api/Contacts/{{id}}"", async ([FromServices] CustomerContext db, [FromRoute] string id) =>
-				await db.Set<Contact>().FindAsync({idParseMethod}));
+			if(configuration.ShouldGetAll)
+			{{
+				app.MapGet(configuration.GetRoute(""Contacts""), ([FromServices] CustomerContext db) =>
+					db.Set<Contact>());
+			}}
+			
+			if(configuration.ShouldGetById)
+			{{
+				app.MapGet(configuration.GetRouteById(""Contacts""), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					await db.Set<Contact>().FindAsync({idParseMethod}));
+			}}
 			
 			return app;
 		}}
@@ -88,7 +97,8 @@ namespace MyApplication
 	}
 }";
 			var customerGeneratedCode =
-@"using Microsoft.AspNetCore.Builder;
+@"using Fritz.InstantAPIs.Generators.Helpers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -99,10 +109,15 @@ namespace MyApplication
 {
 	public static partial class WebApplicationExtensions
 	{
-		public static WebApplication MapCustomerContextToAPIs(this WebApplication app)
+		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig? configuration = null)
 		{
-			app.MapGet(""/api/Contacts"", ([FromServices] CustomerContext db) =>
-				db.Set<Contact>());
+			if(configuration is null) { configuration = InstanceAPIGeneratorConfig.Default; }
+			
+			if(configuration.ShouldGetAll)
+			{
+				app.MapGet(configuration.GetRoute(""Contacts""), ([FromServices] CustomerContext db) =>
+					db.Set<Contact>());
+			}
 			
 			return app;
 		}
@@ -111,7 +126,8 @@ namespace MyApplication
 ";
 
 			var personGeneratedCode =
-@"using Microsoft.AspNetCore.Builder;
+@"using Fritz.InstantAPIs.Generators.Helpers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -122,10 +138,15 @@ namespace MyApplication
 {
 	public static partial class WebApplicationExtensions
 	{
-		public static WebApplication MapPersonContextToAPIs(this WebApplication app)
+		public static WebApplication MapPersonContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig? configuration = null)
 		{
-			app.MapGet(""/api/Contacts"", ([FromServices] PersonContext db) =>
-				db.Set<Contact>());
+			if(configuration is null) { configuration = InstanceAPIGeneratorConfig.Default; }
+			
+			if(configuration.ShouldGetAll)
+			{
+				app.MapGet(configuration.GetRoute(""Contacts""), ([FromServices] PersonContext db) =>
+					db.Set<Contact>());
+			}
 			
 			return app;
 		}
@@ -165,7 +186,8 @@ namespace MyApplication
 	}
 }";
 			var generatedCode =
-@"using Microsoft.AspNetCore.Builder;
+@"using Fritz.InstantAPIs.Generators.Helpers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -176,13 +198,21 @@ namespace MyApplication
 {
 	public static partial class WebApplicationExtensions
 	{
-		public static WebApplication MapCustomerContextToAPIs(this WebApplication app)
+		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig? configuration = null)
 		{
-			app.MapGet(""/api/Contacts"", ([FromServices] CustomerContext db) =>
-				db.Set<Contact>());
+			if(configuration is null) { configuration = InstanceAPIGeneratorConfig.Default; }
 			
-			app.MapGet(""/api/Contacts/{id}"", async ([FromServices] CustomerContext db, [FromRoute] string id) =>
-				await db.Set<Contact>().FindAsync(int.Parse(id)));
+			if(configuration.ShouldGetAll)
+			{
+				app.MapGet(configuration.GetRoute(""Contacts""), ([FromServices] CustomerContext db) =>
+					db.Set<Contact>());
+			}
+			
+			if(configuration.ShouldGetById)
+			{
+				app.MapGet(configuration.GetRouteById(""Contacts""), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					await db.Set<Contact>().FindAsync(int.Parse(id)));
+			}
 			
 			return app;
 		}
@@ -219,7 +249,8 @@ namespace MyTableTypes
 	}
 }";
 			var generatedCode =
-@"using Microsoft.AspNetCore.Builder;
+@"using Fritz.InstantAPIs.Generators.Helpers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyTableTypes;
@@ -231,10 +262,15 @@ namespace MyApplication
 {
 	public static partial class WebApplicationExtensions
 	{
-		public static WebApplication MapCustomerContextToAPIs(this WebApplication app)
+		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig? configuration = null)
 		{
-			app.MapGet(""/api/Contacts"", ([FromServices] CustomerContext db) =>
-				db.Set<Contact>());
+			if(configuration is null) { configuration = InstanceAPIGeneratorConfig.Default; }
+			
+			if(configuration.ShouldGetAll)
+			{
+				app.MapGet(configuration.GetRoute(""Contacts""), ([FromServices] CustomerContext db) =>
+					db.Set<Contact>());
+			}
 			
 			return app;
 		}
@@ -290,7 +326,8 @@ namespace MyApplication
 	}
 }";
 			var generatedCode =
-@"using Microsoft.AspNetCore.Builder;
+@"using Fritz.InstantAPIs.Generators.Helpers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -301,10 +338,15 @@ namespace MyApplication
 {
 	public static partial class WebApplicationExtensions
 	{
-		public static WebApplication MapCustomerContextToAPIs(this WebApplication app)
+		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig? configuration = null)
 		{
-			app.MapGet(""/api/Contacts"", ([FromServices] CustomerContext db) =>
-				db.Set<Contact>());
+			if(configuration is null) { configuration = InstanceAPIGeneratorConfig.Default; }
+			
+			if(configuration.ShouldGetAll)
+			{
+				app.MapGet(configuration.GetRoute(""Contacts""), ([FromServices] CustomerContext db) =>
+					db.Set<Contact>());
+			}
 			
 			return app;
 		}

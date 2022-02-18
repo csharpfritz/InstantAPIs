@@ -1,3 +1,4 @@
+using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using WorkingApi;
 
@@ -21,5 +22,13 @@ app.MapInstantAPIs<MyContext>(config =>
 });
 */
 
-app.MapMyContextToAPIs();
+app.MapMyContextToAPIs(new CustomConfig());
 app.Run();
+
+public sealed class CustomConfig
+	: InstanceAPIGeneratorConfig
+{
+	//public override bool ShouldGetById => false;
+
+	public override string GetRouteById(string tableName) => $"/api/custom/{tableName}/{{id}}";
+}
