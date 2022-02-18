@@ -7,6 +7,7 @@ builder.Services.AddSqlite<MyContext>("Data Source=contacts.db");
 
 var app = builder.Build();
 
+
 app.MapInstantAPIs<MyContext>(config =>
 {
 	// Potential new config API
@@ -15,4 +16,6 @@ app.MapInstantAPIs<MyContext>(config =>
 
 });
 
+
+//app.MapMyContextToAPIs();
 app.Run();

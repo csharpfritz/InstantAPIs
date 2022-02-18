@@ -18,7 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fritz.InstantAPIs\Fritz.InstantAPIs.csproj" />
+	  <ProjectReference Include="..\Fritz.InstantAPIs.Generators\Fritz.InstantAPIs.Generators.csproj"
+						OutputItemType="Analyzer"
+						ReferenceOutputAssembly="false"
+						SetTargetFramework="TargetFramework=netstandard2.0" />
+	  <ProjectReference Include="..\Fritz.InstantAPIs\Fritz.InstantAPIs.csproj" />
   </ItemGroup>
 
 </Project>
