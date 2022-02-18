@@ -7,6 +7,10 @@ builder.Services.AddSqlite<MyContext>("Data Source=contacts.db");
 
 var app = builder.Build();
 
+// MapInstantAPIs is the Reflection-based approach.
+// MapMyContextToAPIs is the source generator approach.
+// Pick one or the other, but not both at the same time.
+
 /*
 app.MapInstantAPIs<MyContext>(config =>
 {
