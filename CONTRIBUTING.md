@@ -16,7 +16,7 @@ The following is a set of guidelines for contributing to the project.  These are
 
 ## Code of Conduct
 
-We have adopted a [code of conduct](https://github.com/csharpfritz/InstantAPIs/blob/main/CODE-OF-CONDUCT) from the Contributor Covenant.  Contributors to this project are expected to adhere to this code.  Please report unwanted behavior to [jeff@jeffreyfritz.com](mailto:jeff@jeffreyfritz.com)
+We have adopted a [code of conduct](https://github.com/csharpfritz/InstantAPIs/blob/main/CODE-OF-CONDUCT.md) from the Contributor Covenant.  Contributors to this project are expected to adhere to this code.  Please report unwanted behavior to [jeff@jeffreyfritz.com](mailto:jeff@jeffreyfritz.com)
 
 ## What should I know before I get started?
 
