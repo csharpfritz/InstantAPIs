@@ -43,7 +43,7 @@ namespace MyApplication
 				db.Set<Contact>());
 			
 			app.MapGet(""/api/Contacts/{id}"", async ([FromServices] CustomerContext db, [FromRoute] string id) =>
-				await db.Set<Contact>().FindAsync(id));
+				await db.Set<Contact>().FindAsync(int.Parse(id)));
 			
 			return app;
 		}

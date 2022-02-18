@@ -77,7 +77,24 @@ namespace Fritz.InstantAPIs.Generators
 						indentWriter.WriteLine($"app.MapGet(\"/api/{table.Name}/{{id}}\", async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
 						indentWriter.Indent++;
 						// TODO: Should put specific parse methods in here for the id type.
-						indentWriter.WriteLine($"await db.Set<{table.PropertyType.Name}>().FindAsync(id));");
+
+						var idValue = "id";
+
+						if(table.IdType.SpecialType == SpecialType.System_Int32)
+						{
+							idValue = "int.Parse(id)";
+						}
+						else if (table.IdType.SpecialType == SpecialType.System_Int64)
+						{
+							idValue = "long.Parse(id)";
+						}
+						// TODO: This is not ideal for identifying a Guid...I think...
+						if (table.IdType.ToDisplayString() == "System.Guid")
+						{
+							idValue = "Guid.Parse(id)";
+						}
+
+						indentWriter.WriteLine($"await db.Set<{table.PropertyType.Name}>().FindAsync({idValue}));");
 						indentWriter.Indent--;
 					}
 				}
