@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Fritz.InstantAPIs.Generators.Tests
@@ -38,6 +39,7 @@ namespace Fritz.InstantAPIs.Generators.Tests
 			test.TestState.AdditionalReferences.Add(typeof(EndpointRouteBuilderExtensions).Assembly);
 			test.TestState.AdditionalReferences.Add(typeof(IApplicationBuilder).Assembly);
 			test.TestState.AdditionalReferences.Add(typeof(IHost).Assembly);
+			test.TestState.AdditionalReferences.Add(typeof(KeyAttribute).Assembly);
 			test.TestState.ExpectedDiagnostics.AddRange(expectedDiagnostics);
 			await test.RunAsync().ConfigureAwait(false);
 		}

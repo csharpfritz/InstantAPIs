@@ -17,6 +17,7 @@ namespace Fritz.InstantAPIs.Generators
 		private static SourceText? Build(INamedTypeSymbol type)
 		{
 			var tables = new List<TableData>();
+			var isIdKeyAttribute = false;
 
 			foreach(var property in type.GetMembers().OfType<IPropertySymbol>()
 				.Where(_ => !_.IsStatic && _.DeclaredAccessibility == Accessibility.Public &&
@@ -29,6 +30,13 @@ namespace Fritz.InstantAPIs.Generators
 				var idProperty = propertySetType.GetMembers().OfType<IPropertySymbol>()
 					.FirstOrDefault(_ => string.Equals(_.Name, "id", StringComparison.OrdinalIgnoreCase) &&
 						!_.IsStatic && _.DeclaredAccessibility == Accessibility.Public);
+
+				if (idProperty is null)
+				{
+					idProperty = propertySetType.GetMembers().OfType<IPropertySymbol>()
+						.FirstOrDefault(_ => _.GetAttributes().Any(_ => _.AttributeClass!.Name == "Key" || _.AttributeClass.Name == "KeyAttribute"));
+					isIdKeyAttribute = idProperty is not null;
+				}
 
 				tables.Add(new TableData(property.Name, propertySetType, idProperty?.Type as INamedTypeSymbol));
 			}
@@ -62,9 +70,11 @@ namespace Fritz.InstantAPIs.Generators
 
 				foreach(var table in tables)
 				{
-					// TODO: If the table property type's namespace
-					// isn't the same as the context's namespace,
-					// then we need to add it.
+					if(!table.PropertyType.ContainingNamespace.Equals(type.ContainingNamespace, SymbolEqualityComparer.Default))
+					{
+						namespaces.Add(table.PropertyType.ContainingNamespace);
+					}
+
 					namespaces.Add("Microsoft.AspNetCore.Mvc");
 
 					indentWriter.WriteLine($"app.MapGet(\"/api/{table.Name}\", ([FromServices] {type.Name} db) =>");
@@ -77,7 +87,6 @@ namespace Fritz.InstantAPIs.Generators
 						indentWriter.WriteLine();
 						indentWriter.WriteLine($"app.MapGet(\"/api/{table.Name}/{{id}}\", async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
 						indentWriter.Indent++;
-						// TODO: Should put specific parse methods in here for the id type.
 
 						var idValue = "id";
 
