@@ -39,6 +39,7 @@ namespace Fritz.InstantAPIs.Generators
 				using var indentWriter = new IndentedTextWriter(writer, "\t");
 
 				var namespaces = new NamespaceGatherer();
+				namespaces.Add("System");
 				namespaces.Add("Microsoft.EntityFrameworkCore");
 				namespaces.Add("Microsoft.AspNetCore.Builder");
 

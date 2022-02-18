@@ -37,15 +37,15 @@ namespace Fritz.InstantAPIs.Generators.Tests
 
 					var compilationOptions = solution.GetProject(projectId)!.CompilationOptions!;
 
-				// NOTE: I commented this out, because I kept getting this error:
-				// error CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-				// Which makes NO sense because I have "#nullable enable" emitted in my
-				// generated code. So, best to just remove this for now.
+					// NOTE: I commented this out, because I kept getting this error:
+					// error CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+					// Which makes NO sense because I have "#nullable enable" emitted in my
+					// generated code. So, best to just remove this for now.
 
-				//compilationOptions = compilationOptions.WithSpecificDiagnosticOptions(
-				//	 compilationOptions.SpecificDiagnosticOptions.SetItems(CSharpVerifierHelper.NullableWarnings));
+					//compilationOptions = compilationOptions.WithSpecificDiagnosticOptions(
+					//	 compilationOptions.SpecificDiagnosticOptions.SetItems(CSharpVerifierHelper.NullableWarnings));
 
-				solution = solution.WithProjectCompilationOptions(projectId, compilationOptions);
+					solution = solution.WithProjectCompilationOptions(projectId, compilationOptions);
 
 					return solution;
 				});
