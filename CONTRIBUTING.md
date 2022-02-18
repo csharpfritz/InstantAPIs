@@ -9,14 +9,14 @@ The following is a set of guidelines for contributing to the project.  These are
     1. [Project Folder Structure](#project-folder-structure)
     1. [Design Decisions](#design-decisions)
 1. [How can I contribute?](#how-can-i-contribute?)
-    1. [Tell us your story](#tell-us-your-story)
-    1. [Write code for a component](#write-code-for-a-component)
+    1. [Work on an Issue in the project](#work-on-an-issue-in-the-project)
+    1. [Report a Bug](#report-a-bug)
     1. [Write documentation](#write-documentation)
 
 
 ## Code of Conduct
 
-We have adopted a code of conduct from the Contributor Covenant.  Contributors to this project are expected to adhere to this code.  Please report unwanted behavior to [jeff@jeffreyfritz.com](mailto:jeff@jeffreyfritz.com)
+We have adopted a [code of conduct](https://github.com/csharpfritz/InstantAPIs/blob/main/CODE-OF-CONDUCT) from the Contributor Covenant.  Contributors to this project are expected to adhere to this code.  Please report unwanted behavior to [jeff@jeffreyfritz.com](mailto:jeff@jeffreyfritz.com)
 
 ## What should I know before I get started?
 
