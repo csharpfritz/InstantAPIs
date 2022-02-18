@@ -10,3 +10,5 @@ public enum ApiMethodsToGenerate
 	Delete = 16,
 	All = 31
 }
+
+public record TableApiMapping(string TableName, ApiMethodsToGenerate MethodsToGenerate = ApiMethodsToGenerate.All);
