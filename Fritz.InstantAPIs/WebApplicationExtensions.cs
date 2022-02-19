@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Microsoft.AspNetCore.Routing;
+using System.Reflection;
 
 namespace Microsoft.AspNetCore.Builder;
 
@@ -7,7 +8,7 @@ public static class WebApplicationExtensions
 
 	public static InstantAPIsConfig Configuration { get; set; } = new();
 
-	public static WebApplication MapInstantAPIs<D>(this WebApplication app, Action<InstantAPIsConfig> configAction = null) where D: DbContext
+	public static IEndpointRouteBuilder MapInstantAPIs<D>(this IEndpointRouteBuilder app, Action<InstantAPIsConfig> configAction = null) where D: DbContext
 	{
 
 		if (configAction != null) configAction(Configuration);
