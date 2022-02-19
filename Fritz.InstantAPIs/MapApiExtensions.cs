@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
@@ -10,7 +11,7 @@ internal class MapApiExtensions
 
 	// TODO: Authentication / Authorization
 
-	internal static void MapInstantGetAll<D, C>(WebApplication app, string url)
+	internal static void MapInstantGetAll<D, C>(IEndpointRouteBuilder app, string url)
 		where D : DbContext where C : class
 	{
 
@@ -21,7 +22,7 @@ internal class MapApiExtensions
 
 	}
 
-	internal static void MapGetById<D,C>(WebApplication app, string url)
+	internal static void MapGetById<D,C>(IEndpointRouteBuilder app, string url)
 		where D: DbContext where C : class
 	{
 
@@ -48,7 +49,7 @@ internal class MapApiExtensions
 
 	}
 
-	internal static void MapInstantPost<D, C>(WebApplication app, string url)
+	internal static void MapInstantPost<D, C>(IEndpointRouteBuilder app, string url)
 		where D : DbContext where C : class
 	{
 
@@ -61,7 +62,7 @@ internal class MapApiExtensions
 
 	}
 
-	internal static void MapInstantPut<D, C>(WebApplication app, string url)
+	internal static void MapInstantPut<D, C>(IEndpointRouteBuilder app, string url)
 		where D : DbContext where C : class
 	{
 
@@ -75,7 +76,7 @@ internal class MapApiExtensions
 
 	}
 
-	internal static void MapDeleteById<D, C>(WebApplication app, string url)
+	internal static void MapDeleteById<D, C>(IEndpointRouteBuilder app, string url)
 		where D : DbContext where C : class
 	{
 
