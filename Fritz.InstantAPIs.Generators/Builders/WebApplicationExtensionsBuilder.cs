@@ -6,7 +6,8 @@ namespace Fritz.InstantAPIs.Generators.Builders
 {
 	internal static class WebApplicationExtensionsBuilder
 	{
-		internal static void Build(IndentedTextWriter indentWriter, INamedTypeSymbol type, List<TableData> tables)
+		internal static void Build(IndentedTextWriter indentWriter, INamedTypeSymbol type, List<TableData> tables,
+			NamespaceGatherer namespaces)
 		{
 			indentWriter.WriteLine("public static partial class WebApplicationExtensions");
 			indentWriter.WriteLine("{");
@@ -22,7 +23,13 @@ namespace Fritz.InstantAPIs.Generators.Builders
 
 			foreach (var table in tables)
 			{
+				if (!table.PropertyType.ContainingNamespace.Equals(type.ContainingNamespace, SymbolEqualityComparer.Default))
+				{
+					namespaces.Add(table.PropertyType.ContainingNamespace);
+				}
+
 				var tableVariableName = $"table{table.Name}";
+
 				indentWriter.WriteLine($"var {tableVariableName} = config[{type.Name}Tables.{table.Name}];");
 				indentWriter.WriteLine();
 
@@ -37,33 +44,36 @@ namespace Fritz.InstantAPIs.Generators.Builders
 				indentWriter.WriteLine("}");
 				indentWriter.WriteLine();
 
-				indentWriter.WriteLine($"if ({tableVariableName}.APIs.HasFlag(ApisToGenerate.GetById))");
-				indentWriter.WriteLine("{");
-				indentWriter.Indent++;
-				indentWriter.WriteLine($"app.MapGet({tableVariableName}.RouteById.Invoke({tableVariableName}.Name), async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
-				indentWriter.Indent++;
-
-				var idValue = "id";
-
-				if (table.IdType!.SpecialType == SpecialType.System_Int32)
+				if (table.IdType is not null)
 				{
-					idValue = "int.Parse(id)";
-				}
-				else if (table.IdType.SpecialType == SpecialType.System_Int64)
-				{
-					idValue = "long.Parse(id)";
-				}
-				// TODO: This is not ideal for identifying a Guid...I think...
-				if (table.IdType.ToDisplayString() == "System.Guid")
-				{
-					idValue = "Guid.Parse(id)";
-				}
+					indentWriter.WriteLine($"if ({tableVariableName}.APIs.HasFlag(ApisToGenerate.GetById))");
+					indentWriter.WriteLine("{");
+					indentWriter.Indent++;
+					indentWriter.WriteLine($"app.MapGet({tableVariableName}.RouteById.Invoke({tableVariableName}.Name), async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
+					indentWriter.Indent++;
 
-				indentWriter.WriteLine($"await db.Set<{table.PropertyType.Name}>().FindAsync({idValue}));");
-				indentWriter.Indent--;
-				indentWriter.Indent--;
-				indentWriter.WriteLine("}");
-				indentWriter.WriteLine();
+					var idValue = "id";
+
+					if (table.IdType!.SpecialType == SpecialType.System_Int32)
+					{
+						idValue = "int.Parse(id)";
+					}
+					else if (table.IdType.SpecialType == SpecialType.System_Int64)
+					{
+						idValue = "long.Parse(id)";
+					}
+					// TODO: This is not ideal for identifying a Guid...I think...
+					if (table.IdType.ToDisplayString() == "System.Guid")
+					{
+						idValue = "Guid.Parse(id)";
+					}
+
+					indentWriter.WriteLine($"await db.Set<{table.PropertyType.Name}>().FindAsync({idValue}));");
+					indentWriter.Indent--;
+					indentWriter.Indent--;
+					indentWriter.WriteLine("}");
+					indentWriter.WriteLine();
+				}
 			}
 
 			indentWriter.WriteLine("return app;");

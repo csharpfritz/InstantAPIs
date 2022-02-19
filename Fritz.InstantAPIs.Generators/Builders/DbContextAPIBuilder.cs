@@ -59,7 +59,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 				indentWriter.WriteLine();
 				CustomInstanceAPIGeneratorConfigBuilder.Build(indentWriter, type.Name, tables);
 				indentWriter.WriteLine();
-				WebApplicationExtensionsBuilder.Build(indentWriter, type, tables);
+				WebApplicationExtensionsBuilder.Build(indentWriter, type, tables, namespaces);
 
 				if (!type.ContainingNamespace.IsGlobalNamespace)
 				{
