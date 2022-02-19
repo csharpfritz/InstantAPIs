@@ -5,6 +5,8 @@ using WorkingApi;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSqlite<MyContext>("Data Source=contacts.db");
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -21,6 +23,9 @@ app.MapInstantAPIs<MyContext>(config =>
 
 });
 */
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapMyContextToAPIs(new CustomConfig());
 app.Run();
