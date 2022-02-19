@@ -27,5 +27,13 @@ app.MapInstantAPIs<MyContext>(config =>
 app.UseSwagger();
 app.UseSwaggerUI();
 
+// If you want to play with customization,
+// uncomment the lines that create MyContextInstanceAPIGeneratorConfig
+// and change values, and then pass config into MapMyContextToAPIs.
+
+//var config = new MyContextInstanceAPIGeneratorConfig();
+//config[MyContextTables.Contacts].APIs = ApisToGenerate.GetById;
+//config[MyContextTables.Contacts].RouteById = name => $"/api/{name}/custom/{{id}}";
+
 app.MapMyContextToAPIs();
 app.Run();
