@@ -43,7 +43,7 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 
 		if (entitySelector == null) throw new ArgumentNullException(nameof(entitySelector));
 
-		var theSetType = entitySelector(_TheContext).GetType();
+		var theSetType = entitySelector(_TheContext).GetType().BaseType;
 		var property = _ContextType.GetProperties().First(p => p.PropertyType == theSetType);
 		_Config.IncludeTable(new TableApiMapping(property.Name, methodsToGenerate));
 		return this;

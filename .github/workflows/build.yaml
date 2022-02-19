@@ -1,0 +1,77 @@
+name: "Build"
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+  pull_request:
+    branches:
+      - main
+      - release
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+  workflow_dispatch:
+    branches:
+      - main
+      - release
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+      
+jobs:
+  build:
+    outputs:
+      version: ${{ steps.set_proj_version.outputs.PKG_VERSION }}
+      relnotes: ${{ steps.set_proj_version.outputs.RELNOTES }}
+    name: Build 
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_NOLOGO: true
+      DOTNET_GENERATE_ASPNET_CERTIFICATE: false
+      DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: false
+      DOTNET_MULTILEVEL_LOOKUP: 0
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1.9.0
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test
+
+    - name: Pack
+      run: dotnet pack Fritz.InstantAPIs/Fritz.InstantAPIs.csproj --configuration Release -o finalpackage --no-build
+
+    - name: Publish artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: nupkg
+        path: finalpackage
+
+    - name: Get version
+      id: set_proj_version
+      shell: pwsh
+      run: |
+        [xml]$nuspec = Get-Content Fritz.InstantAPIs/Fritz.InstantAPIs.csproj
+        $version=$nuspec.project.propertygroup.version
+        $relnotes=$nuspec.project.propertygroup.packagereleasenotes
+        echo "PKG_VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+        echo "RELNOTES=$relnotes" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append

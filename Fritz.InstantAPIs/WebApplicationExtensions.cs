@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Microsoft.AspNetCore.Builder;
@@ -8,15 +9,18 @@ public static class WebApplicationExtensions
 
 	private static InstantAPIsConfig Configuration { get; set; } = new();
 
-	public static WebApplication MapInstantAPIs<D>(this WebApplication app, Action<InstantAPIsConfigBuilder<D>> options = null) where D: DbContext, new()
+	public static IEndpointRouteBuilder MapInstantAPIs<D>(this IEndpointRouteBuilder app, Action<InstantAPIsConfigBuilder<D>> options = null) where D: DbContext
 	{
 
-		var ctx = app.Services.CreateScope().ServiceProvider.GetService(typeof(D)) as D;
-		var builder = new InstantAPIsConfigBuilder<D>(ctx);
-		if (options != null)
+		if (app is IApplicationBuilder applicationBuilder)
 		{
-			options(builder);
-			Configuration = builder.Build();
+			var ctx = applicationBuilder.ApplicationServices.CreateScope().ServiceProvider.GetService(typeof(D)) as D;
+			var builder = new InstantAPIsConfigBuilder<D>(ctx);
+			if (options != null)
+			{
+				options(builder);
+				Configuration = builder.Build();
+			}
 		}
 
 		// Get the tables on the DbContext
