@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Test.InstantAPIs;
 
-public class WebApplciationExtensions : BaseFixture
+public class WebApplicationExtensions : BaseFixture
 {
 
 	[Fact]
