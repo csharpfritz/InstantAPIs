@@ -8,15 +8,14 @@ public static class WebApplicationExtensions
 
 	private static InstantAPIsConfig Configuration { get; set; } = new();
 
-	public static WebApplication MapInstantAPIs<D>(this WebApplication app, Action<InstantAPIsConfigBuilder<D>, D> options = null) where D: DbContext, new()
+	public static WebApplication MapInstantAPIs<D>(this WebApplication app, Action<InstantAPIsConfigBuilder<D>> options = null) where D: DbContext, new()
 	{
 
-		var builder = new InstantAPIsConfigBuilder<D>();
+		var ctx = app.Services.CreateScope().ServiceProvider.GetService(typeof(D)) as D;
+		var builder = new InstantAPIsConfigBuilder<D>(ctx);
 		if (options != null)
 		{
-			var ctx = app.Services.CreateScope().ServiceProvider.GetService(typeof(D)) as D;
-			if (ctx is null) throw new ArgumentNullException(nameof(D));
-			options(builder, ctx);
+			options(builder);
 			Configuration = builder.Build();
 		}
 

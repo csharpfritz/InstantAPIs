@@ -7,9 +7,9 @@ builder.Services.AddSqlite<MyContext>("Data Source=contacts.db");
 
 var app = builder.Build();
 
-app.MapInstantAPIs<MyContext>((options, ctx) =>
+app.MapInstantAPIs<MyContext>(options =>
 {
-	options.IncludeTable(ctx.Contacts);
+	options.IncludeTable(db => db.Contacts);
 });
 
 app.Run();

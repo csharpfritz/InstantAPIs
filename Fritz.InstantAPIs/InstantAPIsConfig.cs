@@ -31,12 +31,20 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 
 	private InstantAPIsConfig _Config = new();
 	private Type _ContextType = typeof(D);
+	private D _TheContext;
 
-	public InstantAPIsConfigBuilder<D> IncludeTable<T>(DbSet<T> table, ApiMethodsToGenerate methodsToGenerate = ApiMethodsToGenerate.All) where T : class
+	public InstantAPIsConfigBuilder(D theContext)
+	{
+		this._TheContext = theContext;
+	}
+
+	public InstantAPIsConfigBuilder<D> IncludeTable<T>(Func<D,DbSet<T>> entitySelector, ApiMethodsToGenerate methodsToGenerate = ApiMethodsToGenerate.All) where T : class
 	{
 
-		var property = _ContextType.GetProperties().Where(p => p.PropertyType == typeof(DbSet<T>)).FirstOrDefault();
-		if (property == null) throw new ArgumentNullException(nameof(table));
+		if (entitySelector == null) throw new ArgumentNullException(nameof(entitySelector));
+
+		var theSetType = entitySelector(_TheContext).GetType();
+		var property = _ContextType.GetProperties().First(p => p.PropertyType == theSetType);
 		_Config.IncludeTable(new TableApiMapping(property.Name, methodsToGenerate));
 		return this;
 	}
