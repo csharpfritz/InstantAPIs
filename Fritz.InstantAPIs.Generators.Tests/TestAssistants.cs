@@ -41,7 +41,7 @@ namespace Fritz.InstantAPIs.Generators.Tests
 			test.TestState.AdditionalReferences.Add(typeof(IApplicationBuilder).Assembly);
 			test.TestState.AdditionalReferences.Add(typeof(IHost).Assembly);
 			test.TestState.AdditionalReferences.Add(typeof(KeyAttribute).Assembly);
-			test.TestState.AdditionalReferences.Add(typeof(InstanceAPIGeneratorConfig).Assembly);
+			test.TestState.AdditionalReferences.Add(typeof(Included).Assembly);
 			test.TestState.ExpectedDiagnostics.AddRange(expectedDiagnostics);
 			await test.RunAsync().ConfigureAwait(false);
 		}

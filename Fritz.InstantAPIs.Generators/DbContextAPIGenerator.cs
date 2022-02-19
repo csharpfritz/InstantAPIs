@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Fritz.InstantAPIs.Generators.Builders;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Threading;
@@ -57,11 +58,11 @@ namespace Fritz.InstantAPIs.Generators
 		{
 			foreach(var type in symbols.OfType<INamedTypeSymbol>())
 			{
-				var builder = new DbContextAPIBuilder(type);
+				var text = DbContextAPIBuilder.Build(type);
 
-				if(builder.Text is not null)
+				if(text is not null)
 				{
-					context.AddSource($"{type.Name}_DbContextAPIGenerator.g.cs", builder.Text);
+					context.AddSource($"{type.Name}_DbContextAPIGenerator.g.cs", text);
 				}
 			}
 		}

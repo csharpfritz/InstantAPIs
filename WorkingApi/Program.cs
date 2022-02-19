@@ -27,13 +27,5 @@ app.MapInstantAPIs<MyContext>(config =>
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapMyContextToAPIs(new CustomConfig());
+app.MapMyContextToAPIs();
 app.Run();
-
-public sealed class CustomConfig
-	: InstanceAPIGeneratorConfig
-{
-	//public override bool ShouldGetById => false;
-
-	public override string GetRouteById(string tableName) => $"/api/custom/{tableName}/{{id}}";
-}

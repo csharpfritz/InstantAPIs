@@ -1,15 +1,16 @@
 ﻿namespace Fritz.InstantAPIs.Generators.Helpers
 {
-	public class InstanceAPIGeneratorConfig
+	public class InstanceAPIGeneratorConfig<T>
+		where T : Enum
 	{
-		public static InstanceAPIGeneratorConfig Default => new();
+		public InstanceAPIGeneratorConfig() { }
 
-		public virtual string GetRoute(string tableName) => $"/api/{tableName}";
-
-		public virtual string GetRouteById(string tableName) => $"/api/{tableName}/{{id}}";
-
-		public virtual bool ShouldGetAll => true;
-
-		public virtual bool ShouldGetById => true;
+		public virtual TableConfig<T> this[T key] =>
+			new(key)
+			{
+				Name = Enum.GetName(typeof(T), key)!,
+				Included = Included.Yes,
+				APIs = ApisToGenerate.All,
+			};
 	}
 }
