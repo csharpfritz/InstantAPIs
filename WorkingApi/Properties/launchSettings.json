@@ -11,7 +11,7 @@
     "WorkingApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/Contacts",
+      "launchUrl": "swagger/index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
