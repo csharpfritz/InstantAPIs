@@ -80,14 +80,47 @@ namespace MyApplication
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{{
-				app.MapGet(tableContacts.Route.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
 					db.Set<Contact>());
 			}}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
 			{{
-				app.MapGet(tableContacts.RouteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+				app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
 					await db.Set<Contact>().FindAsync({idParseMethod}));
+			}}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
+			{{
+				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+				{{
+					db.Add(newObj);
+					await db.SaveChangesAsync();
+				}});
+			}}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
+			{{
+				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+				{{
+					db.Set<Contact>().Attach(newObj);
+					db.Entry(newObj).State = EntityState.Modified;
+					await db.SaveChangesAsync();
+				}});
+			}}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Delete))
+			{{
+				app.MapDelete(tableContacts.RouteDeleteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+				{{
+					var set = db.Set<Contact>();
+					Contact? obj = await set.FindAsync({idParseMethod});
+					
+					if (obj == null) return;
+					
+					db.Set<Contact>().Remove(obj);
+					await db.SaveChangesAsync();
+				}});
 			}}
 			
 			return app;
@@ -126,7 +159,7 @@ namespace MyApplication
 	}
 }";
 			var customerGeneratedCode =
-$@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -136,55 +169,74 @@ using System.Collections.Generic;
 #nullable enable
 
 namespace MyApplication
-{{
+{
 	public enum CustomerContextTables
-	{{
+	{
 		Contacts
-	}}
+	}
 	
 	public sealed class CustomerContextInstanceAPIGeneratorConfig
 		: InstanceAPIGeneratorConfig<CustomerContextTables>
-	{{
+	{
 		private readonly Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>> tableConfigs =
 			new Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>>()
-			{{
-				{{ CustomerContextTables.Contacts, new TableConfig<CustomerContextTables>(CustomerContextTables.Contacts)
-					{{
+			{
+				{ CustomerContextTables.Contacts, new TableConfig<CustomerContextTables>(CustomerContextTables.Contacts)
+					{
 						Name = ""Contacts"",
 						Included = Included.Yes,
 						APIs = ApisToGenerate.All
-					}}
-				}},
-			}};
+					}
+				},
+			};
 		
 		public CustomerContextInstanceAPIGeneratorConfig()
-			: base() {{ }}
+			: base() { }
 		
 		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
-	}}
+	}
 	
 	public static partial class WebApplicationExtensions
-	{{
+	{
 		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
-		{{
-			if (config is null) {{ config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }}
+		{
+			if (config is null) { config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
-			{{
-				app.MapGet(tableContacts.Route.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+			{
+				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
 					db.Set<Contact>());
-			}}
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
+			{
+				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+				{
+					db.Add(newObj);
+					await db.SaveChangesAsync();
+				});
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
+			{
+				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+				{
+					db.Set<Contact>().Attach(newObj);
+					db.Entry(newObj).State = EntityState.Modified;
+					await db.SaveChangesAsync();
+				});
+			}
 			
 			return app;
-		}}
-	}}
-}}
+		}
+	}
+}
 ";
 
 			var personGeneratedCode =
-$@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -194,51 +246,70 @@ using System.Collections.Generic;
 #nullable enable
 
 namespace MyApplication
-{{
+{
 	public enum PersonContextTables
-	{{
+	{
 		Contacts
-	}}
+	}
 	
 	public sealed class PersonContextInstanceAPIGeneratorConfig
 		: InstanceAPIGeneratorConfig<PersonContextTables>
-	{{
+	{
 		private readonly Dictionary<PersonContextTables, TableConfig<PersonContextTables>> tableConfigs =
 			new Dictionary<PersonContextTables, TableConfig<PersonContextTables>>()
-			{{
-				{{ PersonContextTables.Contacts, new TableConfig<PersonContextTables>(PersonContextTables.Contacts)
-					{{
+			{
+				{ PersonContextTables.Contacts, new TableConfig<PersonContextTables>(PersonContextTables.Contacts)
+					{
 						Name = ""Contacts"",
 						Included = Included.Yes,
 						APIs = ApisToGenerate.All
-					}}
-				}},
-			}};
+					}
+				},
+			};
 		
 		public PersonContextInstanceAPIGeneratorConfig()
-			: base() {{ }}
+			: base() { }
 		
 		public sealed override TableConfig<PersonContextTables> this[PersonContextTables key] => tableConfigs[key];
-	}}
+	}
 	
 	public static partial class WebApplicationExtensions
-	{{
+	{
 		public static WebApplication MapPersonContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig<PersonContextTables>? config = null)
-		{{
-			if (config is null) {{ config = new InstanceAPIGeneratorConfig<PersonContextTables>(); }}
+		{
+			if (config is null) { config = new InstanceAPIGeneratorConfig<PersonContextTables>(); }
 			
 			var tableContacts = config[PersonContextTables.Contacts];
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
-			{{
-				app.MapGet(tableContacts.Route.Invoke(tableContacts.Name), ([FromServices] PersonContext db) =>
+			{
+				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] PersonContext db) =>
 					db.Set<Contact>());
-			}}
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
+			{
+				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] PersonContext db, [FromBody] Contact newObj) =>
+				{
+					db.Add(newObj);
+					await db.SaveChangesAsync();
+				});
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
+			{
+				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] PersonContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+				{
+					db.Set<Contact>().Attach(newObj);
+					db.Entry(newObj).State = EntityState.Modified;
+					await db.SaveChangesAsync();
+				});
+			}
 			
 			return app;
-		}}
-	}}
-}}
+		}
+	}
+}
 ";
 
 			await TestAssistants.RunAsync(code,
@@ -273,7 +344,7 @@ namespace MyApplication
 	}
 }";
 			var generatedCode =
-$@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -283,57 +354,90 @@ using System.Collections.Generic;
 #nullable enable
 
 namespace MyApplication
-{{
+{
 	public enum CustomerContextTables
-	{{
+	{
 		Contacts
-	}}
+	}
 	
 	public sealed class CustomerContextInstanceAPIGeneratorConfig
 		: InstanceAPIGeneratorConfig<CustomerContextTables>
-	{{
+	{
 		private readonly Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>> tableConfigs =
 			new Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>>()
-			{{
-				{{ CustomerContextTables.Contacts, new TableConfig<CustomerContextTables>(CustomerContextTables.Contacts)
-					{{
+			{
+				{ CustomerContextTables.Contacts, new TableConfig<CustomerContextTables>(CustomerContextTables.Contacts)
+					{
 						Name = ""Contacts"",
 						Included = Included.Yes,
 						APIs = ApisToGenerate.All
-					}}
-				}},
-			}};
+					}
+				},
+			};
 		
 		public CustomerContextInstanceAPIGeneratorConfig()
-			: base() {{ }}
+			: base() { }
 		
 		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
-	}}
+	}
 	
 	public static partial class WebApplicationExtensions
-	{{
+	{
 		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
-		{{
-			if (config is null) {{ config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }}
+		{
+			if (config is null) { config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
-			{{
-				app.MapGet(tableContacts.Route.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+			{
+				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
 					db.Set<Contact>());
-			}}
+			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
-			{{
-				app.MapGet(tableContacts.RouteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+			{
+				app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
 					await db.Set<Contact>().FindAsync(int.Parse(id)));
-			}}
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
+			{
+				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+				{
+					db.Add(newObj);
+					await db.SaveChangesAsync();
+				});
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
+			{
+				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+				{
+					db.Set<Contact>().Attach(newObj);
+					db.Entry(newObj).State = EntityState.Modified;
+					await db.SaveChangesAsync();
+				});
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Delete))
+			{
+				app.MapDelete(tableContacts.RouteDeleteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+				{
+					var set = db.Set<Contact>();
+					Contact? obj = await set.FindAsync(int.Parse(id));
+					
+					if (obj == null) return;
+					
+					db.Set<Contact>().Remove(obj);
+					await db.SaveChangesAsync();
+				});
+			}
 			
 			return app;
-		}}
-	}}
-}}
+		}
+	}
+}
 ";
 
 			await TestAssistants.RunAsync(code,
@@ -413,8 +517,27 @@ namespace MyApplication
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
-				app.MapGet(tableContacts.Route.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
 					db.Set<Contact>());
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
+			{
+				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+				{
+					db.Add(newObj);
+					await db.SaveChangesAsync();
+				});
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
+			{
+				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+				{
+					db.Set<Contact>().Attach(newObj);
+					db.Entry(newObj).State = EntityState.Modified;
+					await db.SaveChangesAsync();
+				});
 			}
 			
 			return app;
@@ -518,8 +641,27 @@ namespace MyApplication
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
-				app.MapGet(tableContacts.Route.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
 					db.Set<Contact>());
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
+			{
+				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+				{
+					db.Add(newObj);
+					await db.SaveChangesAsync();
+				});
+			}
+			
+			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
+			{
+				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+				{
+					db.Set<Contact>().Attach(newObj);
+					db.Entry(newObj).State = EntityState.Modified;
+					await db.SaveChangesAsync();
+				});
 			}
 			
 			return app;

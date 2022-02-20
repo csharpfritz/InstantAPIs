@@ -14,8 +14,14 @@
 
 		public ApisToGenerate APIs { get; set; }
 
-		public Func<string?, string> Route { get; set; } = value => $"/api/{value}";
+		public Func<string?, string> RouteDeleteById { get; set; } = value => $"/api/{value}/{{id}}";
 
-		public Func<string?, string> RouteById { get; set; } = value => $"/api/{value}/{{id}}";
+		public Func<string?, string> RouteGet { get; set; } = value => $"/api/{value}";
+
+		public Func<string?, string> RouteGetById { get; set; } = value => $"/api/{value}/{{id}}";
+
+		public Func<string?, string> RoutePost { get; set; } = value => $"/api/{value}";
+
+		public Func<string?, string> RoutePut { get; set; } = value => $"/api/{value}/{{id}}";
 	}
 }
