@@ -69,7 +69,8 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.Indent++;
 			indentWriter.WriteLine($"app.MapGet({tableVariableName}.RouteGet.Invoke({tableVariableName}.Name), ([FromServices] {type.Name} db) =>");
 			indentWriter.Indent++;
-			indentWriter.WriteLine($"db.Set<{table.PropertyType.Name}>());");
+			//indentWriter.WriteLine($"db.Set<{table.PropertyType.Name}>());");
+			indentWriter.WriteLine($"db.{table.Name});");
 			indentWriter.Indent--;
 			indentWriter.Indent--;
 			indentWriter.WriteLine("}");
@@ -82,7 +83,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.Indent++;
 			indentWriter.WriteLine($"app.MapGet({tableVariableName}.RouteGetById.Invoke({tableVariableName}.Name), async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
 			indentWriter.Indent++;
-			indentWriter.WriteLine($"await db.Set<{table.PropertyType.Name}>().FindAsync({GetIdParseCode(table.IdType!)}));");
+			indentWriter.WriteLine($"await db.{table.Name}.FindAsync({GetIdParseCode(table.IdType!)}));");
 			indentWriter.Indent--;
 			indentWriter.Indent--;
 			indentWriter.WriteLine("}");
@@ -115,7 +116,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
-			indentWriter.WriteLine($"db.Set<{table.PropertyType.Name}>().Attach(newObj);");
+			indentWriter.WriteLine($"db.{table.Name}.Attach(newObj);");
 			indentWriter.WriteLine("db.Entry(newObj).State = EntityState.Modified;");
 			indentWriter.WriteLine("await db.SaveChangesAsync();");
 
@@ -134,12 +135,11 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
-			indentWriter.WriteLine($"var set = db.Set<{table.PropertyType.Name}>();");
-			indentWriter.WriteLine($"{table.PropertyType.Name}? obj = await set.FindAsync({GetIdParseCode(table.IdType!)});");
+			indentWriter.WriteLine($"{table.PropertyType.Name}? obj = await db.{table.Name}.FindAsync({GetIdParseCode(table.IdType!)});");
 			indentWriter.WriteLine();
 			indentWriter.WriteLine("if (obj == null) return;");
 			indentWriter.WriteLine();
-			indentWriter.WriteLine($"db.Set<{table.PropertyType.Name}>().Remove(obj);");
+			indentWriter.WriteLine($"db.{table.Name}.Remove(obj);");
 			indentWriter.WriteLine("await db.SaveChangesAsync();");
 
 			indentWriter.Indent--;

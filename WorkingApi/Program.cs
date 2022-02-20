@@ -2,6 +2,8 @@ using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using WorkingApi;
 
+//var context = new MyContext(new DbContextOptions<MyContext>());
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSqlite<MyContext>("Data Source=contacts.db");

@@ -81,13 +81,13 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					db.Set<Contact>());
+					db.Contacts);
 			}}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
 			{{
 				app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
-					await db.Set<Contact>().FindAsync({idParseMethod}));
+					await db.Contacts.FindAsync({idParseMethod}));
 			}}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
@@ -103,7 +103,7 @@ namespace MyApplication
 			{{
 				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 				{{
-					db.Set<Contact>().Attach(newObj);
+					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
 				}});
@@ -113,12 +113,11 @@ namespace MyApplication
 			{{
 				app.MapDelete(tableContacts.RouteDeleteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
 				{{
-					var set = db.Set<Contact>();
-					Contact? obj = await set.FindAsync({idParseMethod});
+					Contact? obj = await db.Contacts.FindAsync({idParseMethod});
 					
 					if (obj == null) return;
 					
-					db.Set<Contact>().Remove(obj);
+					db.Contacts.Remove(obj);
 					await db.SaveChangesAsync();
 				}});
 			}}
@@ -207,7 +206,7 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					db.Set<Contact>());
+					db.Contacts);
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
@@ -223,7 +222,7 @@ namespace MyApplication
 			{
 				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 				{
-					db.Set<Contact>().Attach(newObj);
+					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
 				});
@@ -284,7 +283,7 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] PersonContext db) =>
-					db.Set<Contact>());
+					db.Contacts);
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
@@ -300,7 +299,7 @@ namespace MyApplication
 			{
 				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] PersonContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 				{
-					db.Set<Contact>().Attach(newObj);
+					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
 				});
@@ -392,13 +391,13 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					db.Set<Contact>());
+					db.Contacts);
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
 			{
 				app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
-					await db.Set<Contact>().FindAsync(int.Parse(id)));
+					await db.Contacts.FindAsync(int.Parse(id)));
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
@@ -414,7 +413,7 @@ namespace MyApplication
 			{
 				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 				{
-					db.Set<Contact>().Attach(newObj);
+					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
 				});
@@ -424,12 +423,11 @@ namespace MyApplication
 			{
 				app.MapDelete(tableContacts.RouteDeleteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
 				{
-					var set = db.Set<Contact>();
-					Contact? obj = await set.FindAsync(int.Parse(id));
+					Contact? obj = await db.Contacts.FindAsync(int.Parse(id));
 					
 					if (obj == null) return;
 					
-					db.Set<Contact>().Remove(obj);
+					db.Contacts.Remove(obj);
 					await db.SaveChangesAsync();
 				});
 			}
@@ -518,7 +516,7 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					db.Set<Contact>());
+					db.Contacts);
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
@@ -534,7 +532,7 @@ namespace MyApplication
 			{
 				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 				{
-					db.Set<Contact>().Attach(newObj);
+					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
 				});
@@ -642,7 +640,7 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					db.Set<Contact>());
+					db.Contacts);
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
@@ -658,7 +656,7 @@ namespace MyApplication
 			{
 				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 				{
-					db.Set<Contact>().Attach(newObj);
+					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
 				});
