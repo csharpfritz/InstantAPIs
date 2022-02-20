@@ -24,17 +24,13 @@ public static class WebApplicationExtensions
 		}
 
 		// Get the tables on the DbContext
-		var dbTables = typeof(D).GetProperties(BindingFlags.Instance | BindingFlags.Public)
-			.Where(x => x.PropertyType.FullName.StartsWith("Microsoft.EntityFrameworkCore.DbSet"))
-			.Select(x => new TypeTable { Name = x.Name, InstanceType = x.PropertyType.GenericTypeArguments.First() });
+		var dbTables = GetDbTablesForContext<D>();
 
-		var requestedTables = Configuration.IncludedTables.Any(t => t.TableName.Equals("all", StringComparison.InvariantCultureIgnoreCase)) && !Configuration.ExcludedTables.Any() ?
+		var requestedTables = !Configuration.Tables.Any() ?
 			dbTables :
-			dbTables.Where(t => Configuration.IncludedTables.Any(i => t.Name.Equals(i.TableName, StringComparison.InvariantCultureIgnoreCase)) &&
-				!Configuration.ExcludedTables.Any(e => t.Name.Equals(e, StringComparison.CurrentCultureIgnoreCase))
-			).ToArray();
+			Configuration.Tables.Where(t => dbTables.Any(db => db.Name.Equals(t.Name, StringComparison.OrdinalIgnoreCase))).ToArray();
 
-		var allMethods = typeof(MapApiExtensions).GetMethods(BindingFlags.NonPublic | BindingFlags.Static).Where(m => m.Name.StartsWith("Map"));
+		var allMethods = typeof(MapApiExtensions).GetMethods(BindingFlags.NonPublic | BindingFlags.Static).Where(m => m.Name.StartsWith("Map")).ToArray();
 		foreach (var table in requestedTables)
 		{
 
@@ -45,6 +41,11 @@ public static class WebApplicationExtensions
 			// let's use some reflection to get them
 			foreach (var method in allMethods)
 			{
+
+				var sigAttr = method.CustomAttributes.First(x => x.AttributeType == typeof(ApiMethodAttribute)).ConstructorArguments.First();
+				var methodType = (ApiMethodsToGenerate)sigAttr.Value;
+				if ((table.ApiMethodsToGenerate & methodType) != methodType) continue;
+
 				var genericMethod = method.MakeGenericMethod(typeof(D), table.InstanceType);
 				genericMethod.Invoke(null, new object[] { app, url });
 			}
@@ -54,10 +55,19 @@ public static class WebApplicationExtensions
 		return app;
 	}
 
+	internal static IEnumerable<TypeTable> GetDbTablesForContext<D>() where D : DbContext
+	{
+		return typeof(D).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+					.Where(x => x.PropertyType.FullName.StartsWith("Microsoft.EntityFrameworkCore.DbSet"))
+					.Select(x => new TypeTable { Name = x.Name, InstanceType = x.PropertyType.GenericTypeArguments.First() })
+					.ToArray();
+	}
+
 	internal class TypeTable
 	{
 		public string Name { get; set; }
 		public Type InstanceType { get; set; }
+		public ApiMethodsToGenerate ApiMethodsToGenerate { get; set; } = ApiMethodsToGenerate.All;
 	}
 
 }
