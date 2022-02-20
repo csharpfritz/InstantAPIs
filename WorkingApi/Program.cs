@@ -2,8 +2,6 @@ using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using WorkingApi;
 
-//var context = new MyContext(new DbContextOptions<MyContext>());
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSqlite<MyContext>("Data Source=contacts.db");
@@ -26,9 +24,6 @@ app.MapInstantAPIs<MyContext>(config =>
 });
 */
 
-app.UseSwagger();
-app.UseSwaggerUI();
-
 // If you want to play with customization,
 // uncomment the lines that create MyContextInstanceAPIGeneratorConfig
 // and change values, and then pass config into MapMyContextToAPIs.
@@ -36,6 +31,9 @@ app.UseSwaggerUI();
 //var config = new MyContextInstanceAPIGeneratorConfig();
 //config[MyContextTables.Contacts].APIs = ApisToGenerate.GetById;
 //config[MyContextTables.Contacts].RouteById = name => $"/api/{name}/custom/{{id}}";
-
 app.MapMyContextToAPIs();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.Run();
