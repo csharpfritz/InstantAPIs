@@ -1,4 +1,4 @@
-﻿namespace Microsoft.AspNetCore.Builder;
+﻿namespace Fritz.InstantAPIs;
 
 [Flags]
 public enum ApiMethodsToGenerate
@@ -9,4 +9,16 @@ public enum ApiMethodsToGenerate
 	Update = 8,
 	Delete = 16,
 	All = 31
+}
+
+public record TableApiMapping(string TableName, ApiMethodsToGenerate MethodsToGenerate = ApiMethodsToGenerate.All);
+
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+public class ApiMethodAttribute : Attribute
+{
+	public ApiMethodsToGenerate MethodsToGenerate { get; set; }
+	public ApiMethodAttribute(ApiMethodsToGenerate apiMethodsToGenerate)
+	{
+		this.MethodsToGenerate = apiMethodsToGenerate;
+	}
 }

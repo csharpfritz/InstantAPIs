@@ -11,6 +11,7 @@ internal class MapApiExtensions
 
 	// TODO: Authentication / Authorization
 
+	[ApiMethod(ApiMethodsToGenerate.Get)]
 	internal static void MapInstantGetAll<D, C>(IEndpointRouteBuilder app, string url)
 		where D : DbContext where C : class
 	{
@@ -22,6 +23,7 @@ internal class MapApiExtensions
 
 	}
 
+	[ApiMethod(ApiMethodsToGenerate.GetById)]
 	internal static void MapGetById<D,C>(IEndpointRouteBuilder app, string url)
 		where D: DbContext where C : class
 	{
@@ -49,6 +51,7 @@ internal class MapApiExtensions
 
 	}
 
+	[ApiMethod(ApiMethodsToGenerate.Insert)]
 	internal static void MapInstantPost<D, C>(IEndpointRouteBuilder app, string url)
 		where D : DbContext where C : class
 	{
@@ -62,6 +65,7 @@ internal class MapApiExtensions
 
 	}
 
+	[ApiMethod(ApiMethodsToGenerate.Update)]
 	internal static void MapInstantPut<D, C>(IEndpointRouteBuilder app, string url)
 		where D : DbContext where C : class
 	{
@@ -76,6 +80,7 @@ internal class MapApiExtensions
 
 	}
 
+	[ApiMethod(ApiMethodsToGenerate.Delete)]
 	internal static void MapDeleteById<D, C>(IEndpointRouteBuilder app, string url)
 		where D : DbContext where C : class
 	{

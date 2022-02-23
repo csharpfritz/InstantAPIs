@@ -1,4 +1,6 @@
+using Fritz.InstantAPIs;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using WorkingApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,13 +11,12 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.MapInstantAPIs<MyContext>(config =>
+var sw = Stopwatch.StartNew();
+app.MapInstantAPIs<MyContext>(options =>
 {
-	// Potential new config API
-	// config.Include(ctx => ctx.Contacts)
-	//	 .GenerateMethods(ApiMethodsToGenerate.All);
-
+	options.IncludeTable(db => db.Contacts, (ApiMethodsToGenerate.GetById | ApiMethodsToGenerate.Get));
 });
+Console.WriteLine($"Elapsed time to build InstantAPIs: {sw.Elapsed}");
 
 app.UseSwagger();
 app.UseSwaggerUI();
