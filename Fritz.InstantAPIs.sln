@@ -12,6 +12,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{
 		.github\workflows\build.yaml = .github\workflows\build.yaml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C73968E9-8A12-401C-BA5D-127C6D5A55D6}"
+	ProjectSection(SolutionItems) = preProject
+		CODE-OF-CONDUCT.md = CODE-OF-CONDUCT.md
+		CONTRIBUTING.md = CONTRIBUTING.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{CD123B01-1B52-4E80-84F7-4D10E01EE10F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +34,10 @@ Global
 		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD123B01-1B52-4E80-84F7-4D10E01EE10F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD123B01-1B52-4E80-84F7-4D10E01EE10F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD123B01-1B52-4E80-84F7-4D10E01EE10F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD123B01-1B52-4E80-84F7-4D10E01EE10F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
