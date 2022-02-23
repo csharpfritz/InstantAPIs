@@ -102,6 +102,8 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 		// Remove the Excluded tables
 		outTables = outTables.Where(t => !_ExcludedTables.Any(e => t.Name.Equals(e, StringComparison.InvariantCultureIgnoreCase))).ToArray();
 
+		if (outTables == null || !outTables.Any()) throw new ArgumentException("All tables were excluded from this configuration");
+
 		_Config.Tables.UnionWith(outTables);
 
 	}
