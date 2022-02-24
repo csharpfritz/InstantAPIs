@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
@@ -10,6 +11,22 @@ internal class MapApiExtensions
 {
 
 	// TODO: Authentication / Authorization
+	private static Dictionary<Type, PropertyInfo> _IdLookup = new();
+
+	internal static void Initialize<D,C>() 
+		where D: DbContext
+		where C: class 
+	{
+
+		var theType = typeof(C);
+		var idProp = theType.GetProperty("id", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) ?? theType.GetProperties().FirstOrDefault(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute)));
+
+		if (idProp != null)
+		{
+			_IdLookup.Add(theType, idProp);
+		}
+
+	}
 
 	[ApiMethod(ApiMethodsToGenerate.Get)]
 	internal static void MapInstantGetAll<D, C>(IEndpointRouteBuilder app, string url)
@@ -18,7 +35,7 @@ internal class MapApiExtensions
 
 		app.MapGet(url, ([FromServices] D db) =>
 		{
-			return db.Set<C>();
+			return Results.Ok(db.Set<C>());
 		});
 
 	}
@@ -30,22 +47,25 @@ internal class MapApiExtensions
 
 		// identify the ID field
 		var theType = typeof(C);
-		var idProp = theType.GetProperty("id", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) ?? theType.GetProperties().FirstOrDefault(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute)));
+		var idProp = _IdLookup[theType];
 
 		if (idProp == null) return;
 
 		app.MapGet($"{url}/{{id}}", async ([FromServices] D db, [FromRoute] string id) =>
 		{
 
+			C outValue = default(C);
 			if (idProp.PropertyType == typeof(Guid))
-				return await db.Set<C>().FindAsync(Guid.Parse(id));
+				outValue = await db.Set<C>().FindAsync(Guid.Parse(id));
 			else if (idProp.PropertyType == typeof(int))
-				return await db.Set<C>().FindAsync(int.Parse(id));
+				outValue = await db.Set<C>().FindAsync(int.Parse(id));
 			else if (idProp.PropertyType == typeof(long))
-				return await db.Set<C>().FindAsync(long.Parse(id));
+				outValue = await db.Set<C>().FindAsync(long.Parse(id));
 			else //if (idProp.PropertyType == typeof(string))
-				return await db.Set<C>().FindAsync(id);
+				outValue = await db.Set<C>().FindAsync(id);
 
+			if (outValue is null) return Results.NotFound();
+			return Results.Ok(outValue);
 		});
 
 
@@ -61,6 +81,8 @@ internal class MapApiExtensions
 		{
 			db.Add(newObj);
 			await db.SaveChangesAsync();
+			var id = _IdLookup[typeof(C)].GetValue(newObj);
+			return Results.Created($"{url}/{id.ToString()}", newObj);
 		});
 
 	}
@@ -76,6 +98,7 @@ internal class MapApiExtensions
 			db.Set<C>().Attach(newObj);
 			db.Entry(newObj).State = EntityState.Modified;
 			await db.SaveChangesAsync();
+			return Results.NoContent();
 		});
 
 	}
@@ -87,7 +110,7 @@ internal class MapApiExtensions
 
 		// identify the ID field
 		var theType = typeof(C);
-		var idProp = theType.GetProperty("id", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) ?? theType.GetProperties().FirstOrDefault(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute)));
+		var idProp = _IdLookup[theType];
 
 		if (idProp == null) return;
 
@@ -106,10 +129,11 @@ internal class MapApiExtensions
 			else //if (idProp.PropertyType == typeof(string))
 				obj = await set.FindAsync(id);
 
-			if (obj == null) return;
+			if (obj == null) return Results.NotFound();
 
 			db.Set<C>().Remove(obj);
 			await db.SaveChangesAsync();
+			return Results.NoContent();
 
 		});
 
