@@ -141,8 +141,8 @@ app.Run();
 
 Support for:
 
-- query parameters
-- PUT 
+- [query parameters](https://github.com/csharpfritz/InstantAPIs/issues/40)
+- [PUT](https://github.com/csharpfritz/InstantAPIs/issues/39)
 
 ## Community
 
