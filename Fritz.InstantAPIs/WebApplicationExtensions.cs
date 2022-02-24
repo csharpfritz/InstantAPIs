@@ -31,11 +31,14 @@ public static class WebApplicationExtensions
 			Configuration.Tables.Where(t => dbTables.Any(db => db.Name.Equals(t.Name, StringComparison.OrdinalIgnoreCase))).ToArray();
 
 		var allMethods = typeof(MapApiExtensions).GetMethods(BindingFlags.NonPublic | BindingFlags.Static).Where(m => m.Name.StartsWith("Map")).ToArray();
+		var initialize = typeof(MapApiExtensions).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Static);
 		foreach (var table in requestedTables)
 		{
 
 			// The default URL for an InstantAPI is /api/TABLENAME
 			var url = $"/api/{table.Name}";
+
+			initialize.MakeGenericMethod(typeof(D), table.InstanceType).Invoke(null, null);
 
 			// The remaining private static methods in this class build out the Mapped API methods..
 			// let's use some reflection to get them
