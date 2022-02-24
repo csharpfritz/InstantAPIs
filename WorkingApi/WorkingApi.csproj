@@ -22,4 +22,22 @@
     <ProjectReference Include="..\Fritz.InstantAPIs\Fritz.InstantAPIs.csproj" />
   </ItemGroup>
 
+	<PropertyGroup>
+		<!-- Persist the source generator (and other) files to disk in order to be able to have these files
+					in Git and be able to review the generated files in the PR -->
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<!-- 👇 The "base" path for the source generators. It is relative of to .csproj folder.
+						You can but it into '$(OutDir)/Generated' (=> bin Folder) or
+						'$(BaseIntermediateOutputPath)/Generated' (=> obj Folder) for example -->
+		<GeneratedFolder>Generated</GeneratedFolder>
+		<!-- 👇 Write the output for each target framework to a different sub-folder -->
+		<CompilerGeneratedFilesOutputPath>$(GeneratedFolder)\$(TargetFramework)</CompilerGeneratedFilesOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- 👇 Exclude everything in the base folder from future builds
+						to not get any compilation/generation errors -->
+		<Compile Remove="$(GeneratedFolder)/**/*.cs"/>
+	</ItemGroup>
+
 </Project>
