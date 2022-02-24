@@ -16,12 +16,17 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<DebugType>embedded</DebugType>
 		<Version>0.2.0-preview-2</Version>
-		<PackageReleaseNotes>
-			Introduced a fluent configuration API for defining which tables to include and exclude from the Entity Framework Context.
-		  
-			Added the ability to create APIs from JSON files on disk
-		</PackageReleaseNotes>
 	</PropertyGroup>
+
+
+	<Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+		<ReadLinesFromFile File="RELEASE_NOTES.txt" >
+			<Output TaskParameter="Lines" ItemName="ReleaseNoteLines"/>
+		</ReadLinesFromFile>
+		<PropertyGroup>
+			<PackageReleaseNotes>@(ReleaseNoteLines, '%0a')</PackageReleaseNotes>
+		</PropertyGroup>
+	</Target>
 
 	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
