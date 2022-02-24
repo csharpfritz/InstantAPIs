@@ -20,7 +20,7 @@
 
 
 	<Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
-		<ReadLinesFromFile File="RELEASE_NOTES.txt" >
+		<ReadLinesFromFile File="../RELEASE_NOTES.txt" >
 			<Output TaskParameter="Lines" ItemName="ReleaseNoteLines"/>
 		</ReadLinesFromFile>
 		<PropertyGroup>
