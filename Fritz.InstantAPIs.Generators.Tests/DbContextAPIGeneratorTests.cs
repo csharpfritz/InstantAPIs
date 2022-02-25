@@ -36,6 +36,7 @@ namespace MyApplication
 $@"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -70,9 +71,9 @@ namespace MyApplication
 		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
 	}}
 	
-	public static partial class WebApplicationExtensions
+	public static partial class IEndpointRouteBuilderExtensions
 	{{
-		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
+		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
 		{{
 			if (config is null) {{ config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }}
 			
@@ -161,6 +162,7 @@ namespace MyApplication
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -195,9 +197,9 @@ namespace MyApplication
 		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
 	}
 	
-	public static partial class WebApplicationExtensions
+	public static partial class IEndpointRouteBuilderExtensions
 	{
-		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
+		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
 		{
 			if (config is null) { config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }
 			
@@ -238,6 +240,7 @@ namespace MyApplication
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -272,9 +275,9 @@ namespace MyApplication
 		public sealed override TableConfig<PersonContextTables> this[PersonContextTables key] => tableConfigs[key];
 	}
 	
-	public static partial class WebApplicationExtensions
+	public static partial class IEndpointRouteBuilderExtensions
 	{
-		public static WebApplication MapPersonContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig<PersonContextTables>? config = null)
+		public static IEndpointRouteBuilder MapPersonContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<PersonContextTables>? config = null)
 		{
 			if (config is null) { config = new InstanceAPIGeneratorConfig<PersonContextTables>(); }
 			
@@ -346,6 +349,7 @@ namespace MyApplication
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -380,9 +384,9 @@ namespace MyApplication
 		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
 	}
 	
-	public static partial class WebApplicationExtensions
+	public static partial class IEndpointRouteBuilderExtensions
 	{
-		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
+		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
 		{
 			if (config is null) { config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }
 			
@@ -470,6 +474,7 @@ namespace MyTableTypes
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using MyTableTypes;
 using System;
@@ -505,9 +510,9 @@ namespace MyApplication
 		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
 	}
 	
-	public static partial class WebApplicationExtensions
+	public static partial class IEndpointRouteBuilderExtensions
 	{
-		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
+		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
 		{
 			if (config is null) { config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }
 			
@@ -595,6 +600,7 @@ namespace MyApplication
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -629,9 +635,9 @@ namespace MyApplication
 		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
 	}
 	
-	public static partial class WebApplicationExtensions
+	public static partial class IEndpointRouteBuilderExtensions
 	{
-		public static WebApplication MapCustomerContextToAPIs(this WebApplication app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
+		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
 		{
 			if (config is null) { config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }
 			

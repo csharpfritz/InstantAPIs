@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 namespace Fritz.InstantAPIs.Generators.Builders
 {
-	internal static class WebApplicationExtensionsBuilder
+	internal static class IEndpointRouteBuilderExtensionsBuilder
 	{
 		internal static void Build(IndentedTextWriter indentWriter, INamedTypeSymbol type, List<TableData> tables,
 			NamespaceGatherer namespaces)
 		{
-			indentWriter.WriteLine("public static partial class WebApplicationExtensions");
+			indentWriter.WriteLine("public static partial class IEndpointRouteBuilderExtensions");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
-			indentWriter.WriteLine($"public static WebApplication Map{type.Name}ToAPIs(this WebApplication app, InstanceAPIGeneratorConfig<{type.Name}Tables>? config = null)");
+			indentWriter.WriteLine($"public static IEndpointRouteBuilder Map{type.Name}ToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<{type.Name}Tables>? config = null)");
 
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
@@ -69,7 +69,6 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.Indent++;
 			indentWriter.WriteLine($"app.MapGet({tableVariableName}.RouteGet.Invoke({tableVariableName}.Name), ([FromServices] {type.Name} db) =>");
 			indentWriter.Indent++;
-			//indentWriter.WriteLine($"db.Set<{table.PropertyType.Name}>());");
 			indentWriter.WriteLine($"db.{table.Name});");
 			indentWriter.Indent--;
 			indentWriter.Indent--;

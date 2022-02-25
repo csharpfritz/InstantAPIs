@@ -47,6 +47,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 				namespaces.Add("Microsoft.EntityFrameworkCore");
 				namespaces.Add("Microsoft.AspNetCore.Builder");
 				namespaces.Add("Microsoft.AspNetCore.Mvc");
+				namespaces.Add("Microsoft.AspNetCore.Routing");
 
 				if (!type.ContainingNamespace.IsGlobalNamespace)
 				{
@@ -59,7 +60,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 				indentWriter.WriteLine();
 				CustomInstanceAPIGeneratorConfigBuilder.Build(indentWriter, type.Name, tables);
 				indentWriter.WriteLine();
-				WebApplicationExtensionsBuilder.Build(indentWriter, type, tables, namespaces);
+				IEndpointRouteBuilderExtensionsBuilder.Build(indentWriter, type, tables, namespaces);
 
 				if (!type.ContainingNamespace.IsGlobalNamespace)
 				{
