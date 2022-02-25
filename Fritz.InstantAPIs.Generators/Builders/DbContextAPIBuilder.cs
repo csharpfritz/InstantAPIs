@@ -32,7 +32,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 						.FirstOrDefault(_ => _.GetAttributes().Any(_ => _.AttributeClass!.Name == "Key" || _.AttributeClass.Name == "KeyAttribute"));
 				}
 
-				tables.Add(new TableData(property.Name, propertySetType, idProperty?.Type as INamedTypeSymbol));
+				tables.Add(new TableData(property.Name, propertySetType, idProperty?.Type as INamedTypeSymbol, idProperty?.Name));
 			}
 
 			if(tables.Count > 0)
@@ -48,6 +48,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 				namespaces.Add("Microsoft.AspNetCore.Builder");
 				namespaces.Add("Microsoft.AspNetCore.Mvc");
 				namespaces.Add("Microsoft.AspNetCore.Routing");
+				namespaces.Add("Microsoft.AspNetCore.Http");
 
 				if (!type.ContainingNamespace.IsGlobalNamespace)
 				{

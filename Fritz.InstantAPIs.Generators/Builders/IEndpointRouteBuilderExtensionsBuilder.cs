@@ -40,10 +40,10 @@ namespace Fritz.InstantAPIs.Generators.Builders
 				{
 					BuildGetById(indentWriter, type, table, tableVariableName);
 					indentWriter.WriteLine();
+					BuildPost(indentWriter, type, table, tableVariableName);
+					indentWriter.WriteLine();
 				}
 
-				BuildPost(indentWriter, type, table, tableVariableName);
-				indentWriter.WriteLine();
 				BuildPut(indentWriter, type, table, tableVariableName);
 
 				if (table.IdType is not null)
@@ -69,7 +69,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.Indent++;
 			indentWriter.WriteLine($"app.MapGet({tableVariableName}.RouteGet.Invoke({tableVariableName}.Name), ([FromServices] {type.Name} db) =>");
 			indentWriter.Indent++;
-			indentWriter.WriteLine($"db.{table.Name});");
+			indentWriter.WriteLine($"Results.Ok(db.{table.Name}));");
 			indentWriter.Indent--;
 			indentWriter.Indent--;
 			indentWriter.WriteLine("}");
@@ -81,9 +81,16 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 			indentWriter.WriteLine($"app.MapGet({tableVariableName}.RouteGetById.Invoke({tableVariableName}.Name), async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
+			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
-			indentWriter.WriteLine($"await db.{table.Name}.FindAsync({GetIdParseCode(table.IdType!)}));");
+
+			indentWriter.WriteLine($"var outValue = await db.{table.Name}.FindAsync({GetIdParseCode(table.IdType!)});");
+			indentWriter.WriteLine("if (outValue is null) { return Results.NotFound(); }");
+			indentWriter.WriteLine("return Results.Ok(outValue);");
+
 			indentWriter.Indent--;
+			indentWriter.WriteLine("});");
+
 			indentWriter.Indent--;
 			indentWriter.WriteLine("}");
 		}
@@ -93,12 +100,17 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine($"if ({tableVariableName}.APIs.HasFlag(ApisToGenerate.Insert))");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
-			indentWriter.WriteLine($"app.MapPost({tableVariableName}.RoutePost.Invoke({tableVariableName}.Name), async ([FromServices] {type.Name} db, [FromBody] {table.PropertyType.Name} newObj) =>");
+			indentWriter.WriteLine($"var url = {tableVariableName}.RoutePost.Invoke({tableVariableName}.Name);");
+			indentWriter.WriteLine($"app.MapPost(url, async ([FromServices] {type.Name} db, [FromBody] {table.PropertyType.Name} newObj) =>");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
 			indentWriter.WriteLine("db.Add(newObj);");
 			indentWriter.WriteLine("await db.SaveChangesAsync();");
+			indentWriter.WriteLine($"var id = newObj.{table.IdName!};");
+			// TODO: We're assuming that the "created" route is the same as POST/id,
+			// and this may not be true.
+			indentWriter.WriteLine($"return Results.Created($\"{{url}}/{{id}}\", newObj);");
 
 			indentWriter.Indent--;
 			indentWriter.WriteLine("});");
@@ -118,6 +130,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine($"db.{table.Name}.Attach(newObj);");
 			indentWriter.WriteLine("db.Entry(newObj).State = EntityState.Modified;");
 			indentWriter.WriteLine("await db.SaveChangesAsync();");
+			indentWriter.WriteLine("return Results.NoContent();");
 
 			indentWriter.Indent--;
 			indentWriter.WriteLine("});");
@@ -136,10 +149,11 @@ namespace Fritz.InstantAPIs.Generators.Builders
 
 			indentWriter.WriteLine($"{table.PropertyType.Name}? obj = await db.{table.Name}.FindAsync({GetIdParseCode(table.IdType!)});");
 			indentWriter.WriteLine();
-			indentWriter.WriteLine("if (obj == null) return;");
+			indentWriter.WriteLine("if (obj == null) { return Results.NotFound(); }");
 			indentWriter.WriteLine();
 			indentWriter.WriteLine($"db.{table.Name}.Remove(obj);");
 			indentWriter.WriteLine("await db.SaveChangesAsync();");
+			indentWriter.WriteLine("return Results.NoContent();");
 
 			indentWriter.Indent--;
 			indentWriter.WriteLine("});");

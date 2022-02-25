@@ -35,6 +35,7 @@ namespace MyApplication
 			var generatedCode =
 $@"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -82,21 +83,28 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					db.Contacts);
+					Results.Ok(db.Contacts));
 			}}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
 			{{
 				app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
-					await db.Contacts.FindAsync({idParseMethod}));
+				{{
+					var outValue = await db.Contacts.FindAsync({idParseMethod});
+					if (outValue is null) {{ return Results.NotFound(); }}
+					return Results.Ok(outValue);
+				}});
 			}}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
 			{{
-				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+				var url = tableContacts.RoutePost.Invoke(tableContacts.Name);
+				app.MapPost(url, async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
 				{{
 					db.Add(newObj);
 					await db.SaveChangesAsync();
+					var id = newObj.Id;
+					return Results.Created($""{{url}}/{{id}}"", newObj);
 				}});
 			}}
 			
@@ -107,6 +115,7 @@ namespace MyApplication
 					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
+					return Results.NoContent();
 				}});
 			}}
 			
@@ -116,10 +125,11 @@ namespace MyApplication
 				{{
 					Contact? obj = await db.Contacts.FindAsync({idParseMethod});
 					
-					if (obj == null) return;
+					if (obj == null) {{ return Results.NotFound(); }}
 					
 					db.Contacts.Remove(obj);
 					await db.SaveChangesAsync();
+					return Results.NoContent();
 				}});
 			}}
 			
@@ -161,6 +171,7 @@ namespace MyApplication
 			var customerGeneratedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -208,16 +219,7 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					db.Contacts);
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
-			{
-				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
-				{
-					db.Add(newObj);
-					await db.SaveChangesAsync();
-				});
+					Results.Ok(db.Contacts));
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
@@ -227,6 +229,7 @@ namespace MyApplication
 					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
+					return Results.NoContent();
 				});
 			}
 			
@@ -239,6 +242,7 @@ namespace MyApplication
 			var personGeneratedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -286,16 +290,7 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] PersonContext db) =>
-					db.Contacts);
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
-			{
-				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] PersonContext db, [FromBody] Contact newObj) =>
-				{
-					db.Add(newObj);
-					await db.SaveChangesAsync();
-				});
+					Results.Ok(db.Contacts));
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
@@ -305,6 +300,7 @@ namespace MyApplication
 					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
+					return Results.NoContent();
 				});
 			}
 			
@@ -348,6 +344,7 @@ namespace MyApplication
 			var generatedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -395,21 +392,28 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					db.Contacts);
+					Results.Ok(db.Contacts));
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
 			{
 				app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
-					await db.Contacts.FindAsync(int.Parse(id)));
+				{
+					var outValue = await db.Contacts.FindAsync(int.Parse(id));
+					if (outValue is null) { return Results.NotFound(); }
+					return Results.Ok(outValue);
+				});
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
 			{
-				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+				var url = tableContacts.RoutePost.Invoke(tableContacts.Name);
+				app.MapPost(url, async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
 				{
 					db.Add(newObj);
 					await db.SaveChangesAsync();
+					var id = newObj.Unique;
+					return Results.Created($""{url}/{id}"", newObj);
 				});
 			}
 			
@@ -420,6 +424,7 @@ namespace MyApplication
 					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
+					return Results.NoContent();
 				});
 			}
 			
@@ -429,10 +434,11 @@ namespace MyApplication
 				{
 					Contact? obj = await db.Contacts.FindAsync(int.Parse(id));
 					
-					if (obj == null) return;
+					if (obj == null) { return Results.NotFound(); }
 					
 					db.Contacts.Remove(obj);
 					await db.SaveChangesAsync();
+					return Results.NoContent();
 				});
 			}
 			
@@ -473,6 +479,7 @@ namespace MyTableTypes
 			var generatedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -521,16 +528,7 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					db.Contacts);
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
-			{
-				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
-				{
-					db.Add(newObj);
-					await db.SaveChangesAsync();
-				});
+					Results.Ok(db.Contacts));
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
@@ -540,6 +538,7 @@ namespace MyApplication
 					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
+					return Results.NoContent();
 				});
 			}
 			
@@ -599,6 +598,7 @@ namespace MyApplication
 			var generatedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -646,16 +646,7 @@ namespace MyApplication
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 			{
 				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					db.Contacts);
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
-			{
-				app.MapPost(tableContacts.RoutePost.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
-				{
-					db.Add(newObj);
-					await db.SaveChangesAsync();
-				});
+					Results.Ok(db.Contacts));
 			}
 			
 			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
@@ -665,6 +656,7 @@ namespace MyApplication
 					db.Contacts.Attach(newObj);
 					db.Entry(newObj).State = EntityState.Modified;
 					await db.SaveChangesAsync();
+					return Results.NoContent();
 				});
 			}
 			
