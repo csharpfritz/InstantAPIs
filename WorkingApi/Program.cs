@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 var sw = Stopwatch.StartNew();
+
 app.MapInstantAPIs<MyContext>(options =>
 {
 	options.IncludeTable(db => db.Contacts, (ApiMethodsToGenerate.GetById | ApiMethodsToGenerate.Get));
