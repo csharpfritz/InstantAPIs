@@ -61,57 +61,60 @@ namespace MyApplication
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
+			if (tableContacts.Included == Included.Yes)
 			{{
-				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					Results.Ok(db.Contacts));
-			}}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
-			{{
-				app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{{
-					var outValue = await db.Contacts.FindAsync({idParseMethod});
-					if (outValue is null) {{ return Results.NotFound(); }}
-					return Results.Ok(outValue);
-				}});
-			}}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
-			{{
-				var url = tableContacts.RoutePost.Invoke(tableContacts.Name);
-				app.MapPost(url, async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+						Results.Ok(db.Contacts));
+				}}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
 				{{
-					db.Add(newObj);
-					await db.SaveChangesAsync();
-					var id = newObj.Id;
-					return Results.Created($""{{url}}/{{id}}"", newObj);
-				}});
-			}}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
-			{{
-				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					{{
+						var outValue = await db.Contacts.FindAsync({idParseMethod});
+						if (outValue is null) {{ return Results.NotFound(); }}
+						return Results.Ok(outValue);
+					}});
+				}}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
 				{{
-					db.Contacts.Attach(newObj);
-					db.Entry(newObj).State = EntityState.Modified;
-					await db.SaveChangesAsync();
-					return Results.NoContent();
-				}});
-			}}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Delete))
-			{{
-				app.MapDelete(tableContacts.RouteDeleteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					var url = tableContacts.RoutePost.Invoke(tableContacts.Name);
+					app.MapPost(url, async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+					{{
+						db.Add(newObj);
+						await db.SaveChangesAsync();
+						var id = newObj.Id;
+						return Results.Created($""{{url}}/{{id}}"", newObj);
+					}});
+				}}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
 				{{
-					Contact? obj = await db.Contacts.FindAsync({idParseMethod});
-					
-					if (obj == null) {{ return Results.NotFound(); }}
-					
-					db.Contacts.Remove(obj);
-					await db.SaveChangesAsync();
-					return Results.NoContent();
-				}});
+					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					{{
+						db.Contacts.Attach(newObj);
+						db.Entry(newObj).State = EntityState.Modified;
+						await db.SaveChangesAsync();
+						return Results.NoContent();
+					}});
+				}}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Delete))
+				{{
+					app.MapDelete(tableContacts.RouteDeleteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					{{
+						Contact? obj = await db.Contacts.FindAsync({idParseMethod});
+						
+						if (obj == null) {{ return Results.NotFound(); }}
+						
+						db.Contacts.Remove(obj);
+						await db.SaveChangesAsync();
+						return Results.NoContent();
+					}});
+				}}
 			}}
 			
 			return app;
@@ -178,21 +181,24 @@ namespace MyApplication
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
+			if (tableContacts.Included == Included.Yes)
 			{
-				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					Results.Ok(db.Contacts));
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
-			{
-				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{
-					db.Contacts.Attach(newObj);
-					db.Entry(newObj).State = EntityState.Modified;
-					await db.SaveChangesAsync();
-					return Results.NoContent();
-				});
+					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+						Results.Ok(db.Contacts));
+				}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
+				{
+					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					{
+						db.Contacts.Attach(newObj);
+						db.Entry(newObj).State = EntityState.Modified;
+						await db.SaveChangesAsync();
+						return Results.NoContent();
+					});
+				}
 			}
 			
 			return app;
@@ -230,21 +236,24 @@ namespace MyApplication
 			
 			var tableContacts = config[PersonContextTables.Contacts];
 			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
+			if (tableContacts.Included == Included.Yes)
 			{
-				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] PersonContext db) =>
-					Results.Ok(db.Contacts));
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
-			{
-				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] PersonContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{
-					db.Contacts.Attach(newObj);
-					db.Entry(newObj).State = EntityState.Modified;
-					await db.SaveChangesAsync();
-					return Results.NoContent();
-				});
+					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] PersonContext db) =>
+						Results.Ok(db.Contacts));
+				}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
+				{
+					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] PersonContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					{
+						db.Contacts.Attach(newObj);
+						db.Entry(newObj).State = EntityState.Modified;
+						await db.SaveChangesAsync();
+						return Results.NoContent();
+					});
+				}
 			}
 			
 			return app;
@@ -313,57 +322,60 @@ namespace MyApplication
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
+			if (tableContacts.Included == Included.Yes)
 			{
-				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					Results.Ok(db.Contacts));
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
-			{
-				app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{
-					var outValue = await db.Contacts.FindAsync(int.Parse(id));
-					if (outValue is null) { return Results.NotFound(); }
-					return Results.Ok(outValue);
-				});
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
-			{
-				var url = tableContacts.RoutePost.Invoke(tableContacts.Name);
-				app.MapPost(url, async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+						Results.Ok(db.Contacts));
+				}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
 				{
-					db.Add(newObj);
-					await db.SaveChangesAsync();
-					var id = newObj.Unique;
-					return Results.Created($""{url}/{id}"", newObj);
-				});
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
-			{
-				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					{
+						var outValue = await db.Contacts.FindAsync(int.Parse(id));
+						if (outValue is null) { return Results.NotFound(); }
+						return Results.Ok(outValue);
+					});
+				}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
 				{
-					db.Contacts.Attach(newObj);
-					db.Entry(newObj).State = EntityState.Modified;
-					await db.SaveChangesAsync();
-					return Results.NoContent();
-				});
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Delete))
-			{
-				app.MapDelete(tableContacts.RouteDeleteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					var url = tableContacts.RoutePost.Invoke(tableContacts.Name);
+					app.MapPost(url, async ([FromServices] CustomerContext db, [FromBody] Contact newObj) =>
+					{
+						db.Add(newObj);
+						await db.SaveChangesAsync();
+						var id = newObj.Unique;
+						return Results.Created($""{url}/{id}"", newObj);
+					});
+				}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
 				{
-					Contact? obj = await db.Contacts.FindAsync(int.Parse(id));
-					
-					if (obj == null) { return Results.NotFound(); }
-					
-					db.Contacts.Remove(obj);
-					await db.SaveChangesAsync();
-					return Results.NoContent();
-				});
+					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					{
+						db.Contacts.Attach(newObj);
+						db.Entry(newObj).State = EntityState.Modified;
+						await db.SaveChangesAsync();
+						return Results.NoContent();
+					});
+				}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Delete))
+				{
+					app.MapDelete(tableContacts.RouteDeleteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					{
+						Contact? obj = await db.Contacts.FindAsync(int.Parse(id));
+						
+						if (obj == null) { return Results.NotFound(); }
+						
+						db.Contacts.Remove(obj);
+						await db.SaveChangesAsync();
+						return Results.NoContent();
+					});
+				}
 			}
 			
 			return app;
@@ -430,21 +442,24 @@ namespace MyApplication
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
+			if (tableContacts.Included == Included.Yes)
 			{
-				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					Results.Ok(db.Contacts));
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
-			{
-				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{
-					db.Contacts.Attach(newObj);
-					db.Entry(newObj).State = EntityState.Modified;
-					await db.SaveChangesAsync();
-					return Results.NoContent();
-				});
+					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+						Results.Ok(db.Contacts));
+				}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
+				{
+					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					{
+						db.Contacts.Attach(newObj);
+						db.Entry(newObj).State = EntityState.Modified;
+						await db.SaveChangesAsync();
+						return Results.NoContent();
+					});
+				}
 			}
 			
 			return app;
@@ -529,21 +544,24 @@ namespace MyApplication
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
+			if (tableContacts.Included == Included.Yes)
 			{
-				app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
-					Results.Ok(db.Contacts));
-			}
-			
-			if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
-			{
-				app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{
-					db.Contacts.Attach(newObj);
-					db.Entry(newObj).State = EntityState.Modified;
-					await db.SaveChangesAsync();
-					return Results.NoContent();
-				});
+					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+						Results.Ok(db.Contacts));
+				}
+				
+				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
+				{
+					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					{
+						db.Contacts.Attach(newObj);
+						db.Entry(newObj).State = EntityState.Modified;
+						await db.SaveChangesAsync();
+						return Results.NoContent();
+					});
+				}
 			}
 			
 			return app;

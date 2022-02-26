@@ -18,7 +18,8 @@ using (var scope = app.Services.CreateScope())
 
 // This is the configured version.
 app.MapMyContextToAPIs(options =>
-	options.Include(MyContextTables.Contacts, "Contacts", ApisToGenerate.Get));
+	options.Include(MyContextTables.Contacts, "Contacts", ApisToGenerate.Get)
+		.Exclude(MyContextTables.Orders));
 
 // This is the simple "configure everything" version.
 //app.MapMyContextToAPIs();

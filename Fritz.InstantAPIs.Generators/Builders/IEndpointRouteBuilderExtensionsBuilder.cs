@@ -33,6 +33,9 @@ namespace Fritz.InstantAPIs.Generators.Builders
 
 				indentWriter.WriteLine($"var {tableVariableName} = config[{type.Name}Tables.{table.Name}];");
 				indentWriter.WriteLine();
+				indentWriter.WriteLine($"if ({tableVariableName}.Included == Included.Yes)");
+				indentWriter.WriteLine("{");
+				indentWriter.Indent++;
 
 				BuildGet(indentWriter, type, table, tableVariableName);
 				indentWriter.WriteLine();
@@ -52,6 +55,9 @@ namespace Fritz.InstantAPIs.Generators.Builders
 					indentWriter.WriteLine();
 					BuildDeleteById(indentWriter, type, table, tableVariableName);
 				}
+
+				indentWriter.Indent--;
+				indentWriter.WriteLine("}");
 			}
 
 			indentWriter.WriteLine();
