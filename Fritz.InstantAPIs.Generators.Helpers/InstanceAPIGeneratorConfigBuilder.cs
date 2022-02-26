@@ -15,7 +15,7 @@ namespace Fritz.InstantAPIs.Generators.Helpers
 			}
 		}
 
-		public void Include(T key, string? name = null, ApisToGenerate apis = ApisToGenerate.All,
+		public InstanceAPIGeneratorConfigBuilder<T> Include(T key, string? name = null, ApisToGenerate apis = ApisToGenerate.All,
 			Func<string?, string>? routeGet = null, Func<string?, string>? routeGetById = null,
 			Func<string?, string>? routePost = null, Func<string?, string>? routePut = null,
 			Func<string?, string>? routeDeleteById = null)
@@ -23,11 +23,13 @@ namespace Fritz.InstantAPIs.Generators.Helpers
 			_tablesConfig[key] = new TableConfig<T>(key, Included.Yes, name: name,
 				apis: apis, routeGet: routeGet, routeGetById: routeGetById, 
 				routePost: routePost, routePut: routePut, routeDeleteById: routeDeleteById);
+			return this;
 		}
 
-		public void Exclude(T key)
+		public InstanceAPIGeneratorConfigBuilder<T> Exclude(T key)
 		{
 			_tablesConfig[key] = new TableConfig<T>(key, Included.No);
+			return this;
 		}
 
 		public InstanceAPIGeneratorConfig<T> Build() => 

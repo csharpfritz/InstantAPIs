@@ -1,10 +1,11 @@
+using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using WorkingApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<MyContext>(
-	options => options.UseInMemoryDatabase("ToDoList"));
+	options => options.UseInMemoryDatabase("Test"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -15,7 +16,13 @@ using (var scope = app.Services.CreateScope())
 	await SetupMyContextAsync(scope.ServiceProvider.GetService<MyContext>()!);
 }
 
-app.MapMyContextToAPIs();
+// This is the configured version.
+app.MapMyContextToAPIs(options =>
+	options.Include(MyContextTables.Contacts, "Contacts", ApisToGenerate.Get));
+
+// This is the simple "configure everything" version.
+//app.MapMyContextToAPIs();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 

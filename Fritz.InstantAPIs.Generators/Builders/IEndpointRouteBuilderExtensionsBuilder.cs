@@ -13,12 +13,13 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
-			indentWriter.WriteLine($"public static IEndpointRouteBuilder Map{type.Name}ToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<{type.Name}Tables>? config = null)");
-
+			indentWriter.WriteLine($"public static IEndpointRouteBuilder Map{type.Name}ToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<{type.Name}Tables>>? options = null)");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
-			indentWriter.WriteLine($"if (config is null) {{ config = new InstanceAPIGeneratorConfigBuilder<{type.Name}Tables>().Build(); }}");
+			indentWriter.WriteLine($"var builder = new InstanceAPIGeneratorConfigBuilder<{type.Name}Tables>();");
+			indentWriter.WriteLine("if (options is not null) { options(builder); }");
+			indentWriter.WriteLine("var config = builder.Build();");
 			indentWriter.WriteLine();
 
 			foreach (var table in tables)

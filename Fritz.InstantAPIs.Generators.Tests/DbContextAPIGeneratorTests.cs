@@ -53,9 +53,11 @@ namespace MyApplication
 	
 	public static partial class IEndpointRouteBuilderExtensions
 	{{
-		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
+		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<CustomerContextTables>>? options = null)
 		{{
-			if (config is null) {{ config = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>().Build(); }}
+			var builder = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>();
+			if (options is not null) {{ options(builder); }}
+			var config = builder.Build();
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
@@ -168,9 +170,11 @@ namespace MyApplication
 	
 	public static partial class IEndpointRouteBuilderExtensions
 	{
-		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
+		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<CustomerContextTables>>? options = null)
 		{
-			if (config is null) { config = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>().Build(); }
+			var builder = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>();
+			if (options is not null) { options(builder); }
+			var config = builder.Build();
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
@@ -218,9 +222,11 @@ namespace MyApplication
 	
 	public static partial class IEndpointRouteBuilderExtensions
 	{
-		public static IEndpointRouteBuilder MapPersonContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<PersonContextTables>? config = null)
+		public static IEndpointRouteBuilder MapPersonContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<PersonContextTables>>? options = null)
 		{
-			if (config is null) { config = new InstanceAPIGeneratorConfigBuilder<PersonContextTables>().Build(); }
+			var builder = new InstanceAPIGeneratorConfigBuilder<PersonContextTables>();
+			if (options is not null) { options(builder); }
+			var config = builder.Build();
 			
 			var tableContacts = config[PersonContextTables.Contacts];
 			
@@ -299,9 +305,11 @@ namespace MyApplication
 	
 	public static partial class IEndpointRouteBuilderExtensions
 	{
-		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
+		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<CustomerContextTables>>? options = null)
 		{
-			if (config is null) { config = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>().Build(); }
+			var builder = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>();
+			if (options is not null) { options(builder); }
+			var config = builder.Build();
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
@@ -414,9 +422,11 @@ namespace MyApplication
 	
 	public static partial class IEndpointRouteBuilderExtensions
 	{
-		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
+		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<CustomerContextTables>>? options = null)
 		{
-			if (config is null) { config = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>().Build(); }
+			var builder = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>();
+			if (options is not null) { options(builder); }
+			var config = builder.Build();
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
@@ -511,9 +521,11 @@ namespace MyApplication
 	
 	public static partial class IEndpointRouteBuilderExtensions
 	{
-		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
+		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<CustomerContextTables>>? options = null)
 		{
-			if (config is null) { config = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>().Build(); }
+			var builder = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>();
+			if (options is not null) { options(builder); }
+			var config = builder.Build();
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
