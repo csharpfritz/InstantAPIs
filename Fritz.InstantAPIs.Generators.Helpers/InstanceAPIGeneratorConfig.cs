@@ -1,16 +1,17 @@
-﻿namespace Fritz.InstantAPIs.Generators.Helpers
+﻿using System.Collections.Immutable;
+
+namespace Fritz.InstantAPIs.Generators.Helpers
 {
 	public class InstanceAPIGeneratorConfig<T>
-		where T : Enum
+		where T : struct, Enum
 	{
-		public InstanceAPIGeneratorConfig() { }
+		private readonly ImmutableDictionary<T, TableConfig<T>> _tablesConfig;
 
-		public virtual TableConfig<T> this[T key] =>
-			new(key)
-			{
-				Name = Enum.GetName(typeof(T), key)!,
-				Included = Included.Yes,
-				APIs = ApisToGenerate.All,
-			};
+		internal InstanceAPIGeneratorConfig(ImmutableDictionary<T, TableConfig<T>> tablesConfig) 
+		{ 
+			_tablesConfig = tablesConfig ?? throw new ArgumentNullException(nameof(tablesConfig));
+		}
+
+		public virtual TableConfig<T> this[T key] => _tablesConfig[key];
 	}
 }

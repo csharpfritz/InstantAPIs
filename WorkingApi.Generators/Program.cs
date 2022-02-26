@@ -1,0 +1,41 @@
+using Microsoft.EntityFrameworkCore;
+using WorkingApi;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<MyContext>(
+	options => options.UseInMemoryDatabase("ToDoList"));
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+	await SetupMyContextAsync(scope.ServiceProvider.GetService<MyContext>()!);
+}
+
+app.MapMyContextToAPIs();
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.Run();
+
+static async Task SetupMyContextAsync(MyContext context)
+{
+	await context.Contacts.AddAsync(new Contact
+	{
+		Id = 1,
+		Name = "Jason",
+		Email = "jason@bock.com"
+	});
+
+	await context.Contacts.AddAsync(new Contact
+	{
+		Id = 2,
+		Name = "Jeff",
+		Email = "jeff@fritz.com"
+	});
+
+	await context.SaveChangesAsync();
+}

@@ -18,7 +18,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
-			indentWriter.WriteLine($"if (config is null) {{ config = new InstanceAPIGeneratorConfig<{type.Name}Tables>(); }}");
+			indentWriter.WriteLine($"if (config is null) {{ config = new InstanceAPIGeneratorConfigBuilder<{type.Name}Tables>().Build(); }}");
 			indentWriter.WriteLine();
 
 			foreach (var table in tables)

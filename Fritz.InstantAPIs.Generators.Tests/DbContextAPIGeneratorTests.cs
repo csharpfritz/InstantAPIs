@@ -51,32 +51,11 @@ namespace MyApplication
 		Contacts
 	}}
 	
-	public sealed class CustomerContextInstanceAPIGeneratorConfig
-		: InstanceAPIGeneratorConfig<CustomerContextTables>
-	{{
-		private readonly Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>> tableConfigs =
-			new Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>>()
-			{{
-				{{ CustomerContextTables.Contacts, new TableConfig<CustomerContextTables>(CustomerContextTables.Contacts)
-					{{
-						Name = ""Contacts"",
-						Included = Included.Yes,
-						APIs = ApisToGenerate.All
-					}}
-				}},
-			}};
-		
-		public CustomerContextInstanceAPIGeneratorConfig()
-			: base() {{ }}
-		
-		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
-	}}
-	
 	public static partial class IEndpointRouteBuilderExtensions
 	{{
 		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
 		{{
-			if (config is null) {{ config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }}
+			if (config is null) {{ config = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>().Build(); }}
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
@@ -187,32 +166,11 @@ namespace MyApplication
 		Contacts
 	}
 	
-	public sealed class CustomerContextInstanceAPIGeneratorConfig
-		: InstanceAPIGeneratorConfig<CustomerContextTables>
-	{
-		private readonly Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>> tableConfigs =
-			new Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>>()
-			{
-				{ CustomerContextTables.Contacts, new TableConfig<CustomerContextTables>(CustomerContextTables.Contacts)
-					{
-						Name = ""Contacts"",
-						Included = Included.Yes,
-						APIs = ApisToGenerate.All
-					}
-				},
-			};
-		
-		public CustomerContextInstanceAPIGeneratorConfig()
-			: base() { }
-		
-		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
-	}
-	
 	public static partial class IEndpointRouteBuilderExtensions
 	{
 		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
 		{
-			if (config is null) { config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }
+			if (config is null) { config = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>().Build(); }
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
@@ -258,32 +216,11 @@ namespace MyApplication
 		Contacts
 	}
 	
-	public sealed class PersonContextInstanceAPIGeneratorConfig
-		: InstanceAPIGeneratorConfig<PersonContextTables>
-	{
-		private readonly Dictionary<PersonContextTables, TableConfig<PersonContextTables>> tableConfigs =
-			new Dictionary<PersonContextTables, TableConfig<PersonContextTables>>()
-			{
-				{ PersonContextTables.Contacts, new TableConfig<PersonContextTables>(PersonContextTables.Contacts)
-					{
-						Name = ""Contacts"",
-						Included = Included.Yes,
-						APIs = ApisToGenerate.All
-					}
-				},
-			};
-		
-		public PersonContextInstanceAPIGeneratorConfig()
-			: base() { }
-		
-		public sealed override TableConfig<PersonContextTables> this[PersonContextTables key] => tableConfigs[key];
-	}
-	
 	public static partial class IEndpointRouteBuilderExtensions
 	{
 		public static IEndpointRouteBuilder MapPersonContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<PersonContextTables>? config = null)
 		{
-			if (config is null) { config = new InstanceAPIGeneratorConfig<PersonContextTables>(); }
+			if (config is null) { config = new InstanceAPIGeneratorConfigBuilder<PersonContextTables>().Build(); }
 			
 			var tableContacts = config[PersonContextTables.Contacts];
 			
@@ -360,32 +297,11 @@ namespace MyApplication
 		Contacts
 	}
 	
-	public sealed class CustomerContextInstanceAPIGeneratorConfig
-		: InstanceAPIGeneratorConfig<CustomerContextTables>
-	{
-		private readonly Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>> tableConfigs =
-			new Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>>()
-			{
-				{ CustomerContextTables.Contacts, new TableConfig<CustomerContextTables>(CustomerContextTables.Contacts)
-					{
-						Name = ""Contacts"",
-						Included = Included.Yes,
-						APIs = ApisToGenerate.All
-					}
-				},
-			};
-		
-		public CustomerContextInstanceAPIGeneratorConfig()
-			: base() { }
-		
-		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
-	}
-	
 	public static partial class IEndpointRouteBuilderExtensions
 	{
 		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
 		{
-			if (config is null) { config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }
+			if (config is null) { config = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>().Build(); }
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
@@ -496,32 +412,11 @@ namespace MyApplication
 		Contacts
 	}
 	
-	public sealed class CustomerContextInstanceAPIGeneratorConfig
-		: InstanceAPIGeneratorConfig<CustomerContextTables>
-	{
-		private readonly Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>> tableConfigs =
-			new Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>>()
-			{
-				{ CustomerContextTables.Contacts, new TableConfig<CustomerContextTables>(CustomerContextTables.Contacts)
-					{
-						Name = ""Contacts"",
-						Included = Included.Yes,
-						APIs = ApisToGenerate.All
-					}
-				},
-			};
-		
-		public CustomerContextInstanceAPIGeneratorConfig()
-			: base() { }
-		
-		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
-	}
-	
 	public static partial class IEndpointRouteBuilderExtensions
 	{
 		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
 		{
-			if (config is null) { config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }
+			if (config is null) { config = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>().Build(); }
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			
@@ -614,32 +509,11 @@ namespace MyApplication
 		Contacts
 	}
 	
-	public sealed class CustomerContextInstanceAPIGeneratorConfig
-		: InstanceAPIGeneratorConfig<CustomerContextTables>
-	{
-		private readonly Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>> tableConfigs =
-			new Dictionary<CustomerContextTables, TableConfig<CustomerContextTables>>()
-			{
-				{ CustomerContextTables.Contacts, new TableConfig<CustomerContextTables>(CustomerContextTables.Contacts)
-					{
-						Name = ""Contacts"",
-						Included = Included.Yes,
-						APIs = ApisToGenerate.All
-					}
-				},
-			};
-		
-		public CustomerContextInstanceAPIGeneratorConfig()
-			: base() { }
-		
-		public sealed override TableConfig<CustomerContextTables> this[CustomerContextTables key] => tableConfigs[key];
-	}
-	
 	public static partial class IEndpointRouteBuilderExtensions
 	{
 		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, InstanceAPIGeneratorConfig<CustomerContextTables>? config = null)
 		{
-			if (config is null) { config = new InstanceAPIGeneratorConfig<CustomerContextTables>(); }
+			if (config is null) { config = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>().Build(); }
 			
 			var tableContacts = config[CustomerContextTables.Contacts];
 			

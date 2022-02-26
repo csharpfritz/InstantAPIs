@@ -59,8 +59,6 @@ namespace Fritz.InstantAPIs.Generators.Builders
 
 				TablesEnumBuilder.Build(indentWriter, type.Name, tables);
 				indentWriter.WriteLine();
-				CustomInstanceAPIGeneratorConfigBuilder.Build(indentWriter, type.Name, tables);
-				indentWriter.WriteLine();
 				IEndpointRouteBuilderExtensionsBuilder.Build(indentWriter, type, tables, namespaces);
 
 				if (!type.ContainingNamespace.IsGlobalNamespace)
