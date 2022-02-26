@@ -99,7 +99,11 @@ To use this, do the following:
    cd DemoApi 
    ```
 
-1. Add a reference to `Fritz.InstantAPIs.dll`
+1. Add the NuGet package for [Fritz.InstantAPIs](https://www.nuget.org/packages/Fritz.InstantAPIs/):
+
+   ```bash
+   dotnet add package Fritz.InstantAPIs --prerelease
+   ```
 
 1. In *Program.cs*, add the following namespace:
 
@@ -141,8 +145,8 @@ app.Run();
 
 Support for:
 
-- query parameters
-- PUT 
+- [query parameters](https://github.com/csharpfritz/InstantAPIs/issues/40)
+- [PUT](https://github.com/csharpfritz/InstantAPIs/issues/39)
 
 ## Community
 
