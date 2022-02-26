@@ -77,7 +77,7 @@ A typical content in *mock.json* looks like so:
 
 The above JSON will create the following routes:
 
-|HTTP Verb  |Column2  |
+|HTTP Verb  |Endpoint  |
 |---------|---------|
 |  GET   | /products        |
 |  GET   | /products/{id}        |
