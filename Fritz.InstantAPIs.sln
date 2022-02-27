@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		CODE-OF-CONDUCT.md = CODE-OF-CONDUCT.md
 		CONTRIBUTING.md = CONTRIBUTING.md
+		RELEASE_NOTES.txt = RELEASE_NOTES.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{CD123B01-1B52-4E80-84F7-4D10E01EE10F}"

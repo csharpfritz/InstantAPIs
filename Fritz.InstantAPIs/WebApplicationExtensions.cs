@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 
@@ -36,8 +37,12 @@ public static class WebApplicationExtensions
 	private static void MapInstantAPIsUsingReflection<D>(IEndpointRouteBuilder app, IEnumerable<TypeTable> requestedTables) where D : DbContext
 	{
 
-		var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();
-		var logger = loggerFactory.CreateLogger(LOGGER_CATEGORY_NAME);
+		ILogger logger = NullLogger.Instance;
+		if (app.ServiceProvider != null)
+		{
+			var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();
+			logger = loggerFactory.CreateLogger(LOGGER_CATEGORY_NAME);
+		}
 
 		var allMethods = typeof(MapApiExtensions).GetMethods(BindingFlags.NonPublic | BindingFlags.Static).Where(m => m.Name.StartsWith("Map")).ToArray();
 		var initialize = typeof(MapApiExtensions).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Static);
