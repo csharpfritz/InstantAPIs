@@ -1,3 +1,5 @@
 ﻿v0.2.0
 - Introduced a fluent configuration API for defining which tables to include and exclude from the Entity Framework Context.
 - Added the ability to create APIs from JSON files on disk		
+- Added ability to specify OpenAPI configuration
+- Added Logging for reflection API generation
