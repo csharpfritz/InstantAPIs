@@ -6,18 +6,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Fritz.InstantAPIs.Generators.Tests
+namespace Fritz.InstantAPIs.Generators.Tests;
+
+public static class DbContextAPIGeneratorTests
 {
-	public static class DbContextAPIGeneratorTests
+	[Theory]
+	[InlineData("int", "int.Parse(id)")]
+	[InlineData("long", "long.Parse(id)")]
+	[InlineData("Guid", "Guid.Parse(id)")]
+	[InlineData("string", "id")]
+	public static async Task GenerateWhenDbContextExists(string idType, string idParseMethod)
 	{
-		[Theory]
-		[InlineData("int", "int.Parse(id)")]
-		[InlineData("long", "long.Parse(id)")]
-		[InlineData("Guid", "Guid.Parse(id)")]
-		[InlineData("string", "id")]
-		public static async Task GenerateWhenDbContextExists(string idType, string idParseMethod)
-		{
-			var code =
+		var code =
 $@"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
@@ -38,7 +38,7 @@ namespace MyApplication
 		public string? Name {{ get; set; }}
 	}}
 }}";
-			var generatedCode =
+		var generatedCode =
 $@"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -153,15 +153,15 @@ namespace MyApplication
 }}
 ";
 
-			await TestAssistants.RunAsync(code,
-				new[] { (typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", generatedCode) },
-				Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
-		}
+		await TestAssistants.RunAsync(code,
+			new[] { (typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", generatedCode) },
+			Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
+	}
 
-		[Fact]
-		public static async Task GenerateWhenMultipleDbContextsExists()
-		{
-			var code =
+	[Fact]
+	public static async Task GenerateWhenMultipleDbContextsExists()
+	{
+		var code =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
@@ -187,7 +187,7 @@ namespace MyApplication
 		public string? Name { get; set; }
 	}
 }";
-			var customerGeneratedCode =
+		var customerGeneratedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -258,7 +258,7 @@ namespace MyApplication
 }
 ";
 
-			var personGeneratedCode =
+		var personGeneratedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -329,19 +329,19 @@ namespace MyApplication
 }
 ";
 
-			await TestAssistants.RunAsync(code,
-				new[] 
-				{ 
-					(typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", customerGeneratedCode),
-					(typeof(DbContextAPIGenerator), "PersonContext_DbContextAPIGenerator.g.cs", personGeneratedCode)
-				},
-				Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
-		}
+		await TestAssistants.RunAsync(code,
+			new[] 
+			{ 
+				(typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", customerGeneratedCode),
+				(typeof(DbContextAPIGenerator), "PersonContext_DbContextAPIGenerator.g.cs", personGeneratedCode)
+			},
+			Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
+	}
 
-		[Fact]
-		public static async Task GenerateWhenIdentifierUsesKeyAttribute()
-		{
-			var code =
+	[Fact]
+	public static async Task GenerateWhenIdentifierUsesKeyAttribute()
+	{
+		var code =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
@@ -364,7 +364,7 @@ namespace MyApplication
 		public string? Name { get; set; }
 	}
 }";
-			var generatedCode =
+		var generatedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -479,15 +479,15 @@ namespace MyApplication
 }
 ";
 
-			await TestAssistants.RunAsync(code,
-				new[] { (typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", generatedCode) },
-				Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
-		}
+		await TestAssistants.RunAsync(code,
+			new[] { (typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", generatedCode) },
+			Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
+	}
 
-		[Fact]
-		public static async Task GenerateWhenTableTypeNamespaceIsDifferentThanDbContextNamespace()
-		{
-			var code =
+	[Fact]
+	public static async Task GenerateWhenTableTypeNamespaceIsDifferentThanDbContextNamespace()
+	{
+		var code =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
@@ -511,7 +511,7 @@ namespace MyTableTypes
 		public string? Name { get; set; }
 	}
 }";
-			var generatedCode =
+		var generatedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -583,15 +583,15 @@ namespace MyApplication
 }
 ";
 
-			await TestAssistants.RunAsync(code,
-				new[] { (typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", generatedCode) },
-				Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
-		}
+		await TestAssistants.RunAsync(code,
+			new[] { (typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", generatedCode) },
+			Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
+	}
 
-		[Fact]
-		public static async Task GenerateWhenDbContextIsNotMarkedByAttribute()
-		{
-			var code =
+	[Fact]
+	public static async Task GenerateWhenDbContextIsNotMarkedByAttribute()
+	{
+		var code =
 @"using Microsoft.EntityFrameworkCore;
 
 namespace MyApplication
@@ -607,31 +607,31 @@ namespace MyApplication
 	}
 }";
 
-			await TestAssistants.RunAsync(code,
-				Enumerable.Empty<(Type, string, string)>(),
-				Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
-		}
+		await TestAssistants.RunAsync(code,
+			Enumerable.Empty<(Type, string, string)>(),
+			Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
+	}
 
-		[Fact]
-		public static async Task GenerateWhenTypeGivenInAttributeIsNotDbContext()
-		{
-			var code =
+	[Fact]
+	public static async Task GenerateWhenTypeGivenInAttributeIsNotDbContext()
+	{
+		var code =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 
 [assembly: InstantAPIsForDbContext(typeof(string))]";
 
-			var diagnostic = new DiagnosticResult(NotADbContextDiagnostic.Id, DiagnosticSeverity.Error)
-				.WithSpan(3, 12, 3, 51); 
-			
-			await TestAssistants.RunAsync(code,
-				Enumerable.Empty<(Type, string, string)>(),
-				new[] { diagnostic }).ConfigureAwait(false);
-		}
+		var diagnostic = new DiagnosticResult(NotADbContextDiagnostic.Id, DiagnosticSeverity.Error)
+			.WithSpan(3, 12, 3, 51); 
+		
+		await TestAssistants.RunAsync(code,
+			Enumerable.Empty<(Type, string, string)>(),
+			new[] { diagnostic }).ConfigureAwait(false);
+	}
 
-		[Fact]
-		public static async Task GenerateWhenDbContextExistsAndDoesNotHaveIdProperty()
-		{
-			var code =
+	[Fact]
+	public static async Task GenerateWhenDbContextExistsAndDoesNotHaveIdProperty()
+	{
+		var code =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
@@ -650,7 +650,7 @@ namespace MyApplication
 		public string? Name { get; set; }
 	}
 }";
-			var generatedCode =
+		var generatedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -721,15 +721,15 @@ namespace MyApplication
 }
 ";
 
-			await TestAssistants.RunAsync(code,
-				new[] { (typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", generatedCode) },
-				Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
-		}
+		await TestAssistants.RunAsync(code,
+			new[] { (typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", generatedCode) },
+			Enumerable.Empty<DiagnosticResult>()).ConfigureAwait(false);
+	}
 
-		[Fact]
-		public static async Task GenerateWhenMultipleAttributeDefinitionsExist()
-		{
-			var code =
+	[Fact]
+	public static async Task GenerateWhenMultipleAttributeDefinitionsExist()
+	{
+		var code =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
@@ -749,7 +749,7 @@ namespace MyApplication
 		public string? Name { get; set; }
 	}
 }";
-			var generatedCode =
+		var generatedCode =
 @"using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -820,11 +820,10 @@ namespace MyApplication
 }
 ";
 
-			var diagnostic = new DiagnosticResult(DuplicateDefinitionDiagnostic.Id, DiagnosticSeverity.Warning)
-				.WithSpan(6, 12, 6, 60);
-			await TestAssistants.RunAsync(code,
-				new[] { (typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", generatedCode) },
-				new[] { diagnostic }).ConfigureAwait(false);
-		}
+		var diagnostic = new DiagnosticResult(DuplicateDefinitionDiagnostic.Id, DiagnosticSeverity.Warning)
+			.WithSpan(6, 12, 6, 60);
+		await TestAssistants.RunAsync(code,
+			new[] { (typeof(DbContextAPIGenerator), "CustomerContext_DbContextAPIGenerator.g.cs", generatedCode) },
+			new[] { diagnostic }).ConfigureAwait(false);
 	}
 }

@@ -15,57 +15,56 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Fritz.InstantAPIs.Generators.Tests
+namespace Fritz.InstantAPIs.Generators.Tests;
+
+using GeneratorTest = CSharpIncrementalSourceGeneratorVerifier<DbContextAPIGenerator>;
+
+internal static class TestAssistants
 {
-	using GeneratorTest = CSharpIncrementalSourceGeneratorVerifier<DbContextAPIGenerator>;
-
-	internal static class TestAssistants
+	internal static async Task RunAsync(string code,
+		IEnumerable<(Type, string, string)> generatedSources,
+		IEnumerable<DiagnosticResult> expectedDiagnostics)
 	{
-		internal static async Task RunAsync(string code,
-			IEnumerable<(Type, string, string)> generatedSources,
-			IEnumerable<DiagnosticResult> expectedDiagnostics)
+		var test = new GeneratorTest.Test
 		{
-			var test = new GeneratorTest.Test
+			ReferenceAssemblies = ReferenceAssemblies.Net.Net60,
+			TestState =
 			{
-				ReferenceAssemblies = ReferenceAssemblies.Net.Net60,
-				TestState =
-				{
-					Sources = { code },
-				},
-			};
+				Sources = { code },
+			},
+		};
 
-			foreach (var generatedSource in generatedSources)
-			{
-				test.TestState.GeneratedSources.Add(generatedSource);
-			}
-
-			var referencedAssemblies = new HashSet<Assembly>
-			{
-				typeof(DbContextAPIGenerator).Assembly,
-				typeof(DbContext).Assembly,
-				typeof(WebApplication).Assembly,
-				typeof(FromServicesAttribute).Assembly,
-				typeof(EndpointRouteBuilderExtensions).Assembly,
-				typeof(IApplicationBuilder).Assembly,
-				typeof(IHost).Assembly,
-				typeof(KeyAttribute).Assembly,
-				typeof(Included).Assembly,
-				typeof(IEndpointRouteBuilder).Assembly,
-				typeof(RouteData).Assembly,
-				typeof(Results).Assembly,
-				typeof(NullLogger).Assembly,
-				typeof(ILogger).Assembly,
-				typeof(ServiceProviderServiceExtensions).Assembly,
-				//typeof(IServiceProvider).Assembly
-			};
-
-			foreach(var referencedAssembly in referencedAssemblies)
-			{
-				test.TestState.AdditionalReferences.Add(referencedAssembly);
-			}
-
-			test.TestState.ExpectedDiagnostics.AddRange(expectedDiagnostics);
-			await test.RunAsync().ConfigureAwait(false);
+		foreach (var generatedSource in generatedSources)
+		{
+			test.TestState.GeneratedSources.Add(generatedSource);
 		}
+
+		var referencedAssemblies = new HashSet<Assembly>
+		{
+			typeof(DbContextAPIGenerator).Assembly,
+			typeof(DbContext).Assembly,
+			typeof(WebApplication).Assembly,
+			typeof(FromServicesAttribute).Assembly,
+			typeof(EndpointRouteBuilderExtensions).Assembly,
+			typeof(IApplicationBuilder).Assembly,
+			typeof(IHost).Assembly,
+			typeof(KeyAttribute).Assembly,
+			typeof(Included).Assembly,
+			typeof(IEndpointRouteBuilder).Assembly,
+			typeof(RouteData).Assembly,
+			typeof(Results).Assembly,
+			typeof(NullLogger).Assembly,
+			typeof(ILogger).Assembly,
+			typeof(ServiceProviderServiceExtensions).Assembly,
+			//typeof(IServiceProvider).Assembly
+		};
+
+		foreach(var referencedAssembly in referencedAssemblies)
+		{
+			test.TestState.AdditionalReferences.Add(referencedAssembly);
+		}
+
+		test.TestState.ExpectedDiagnostics.AddRange(expectedDiagnostics);
+		await test.RunAsync().ConfigureAwait(false);
 	}
 }

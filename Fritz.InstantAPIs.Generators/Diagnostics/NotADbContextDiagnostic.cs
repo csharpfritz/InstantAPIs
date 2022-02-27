@@ -1,12 +1,11 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Globalization;
 
 namespace Fritz.InstantAPIs.Generators.Diagnostics;
 
 public static class NotADbContextDiagnostic
 {
-	public static Diagnostic Create(INamedTypeSymbol type, AttributeSyntax attribute) =>
+	public static Diagnostic Create(INamedTypeSymbol type, SyntaxNode attribute) =>
 		Diagnostic.Create(new DiagnosticDescriptor(
 			NotADbContextDiagnostic.Id, NotADbContextDiagnostic.Title,
 			string.Format(CultureInfo.CurrentCulture, NotADbContextDiagnostic.Message, type.Name),

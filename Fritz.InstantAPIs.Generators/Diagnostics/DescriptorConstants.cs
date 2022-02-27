@@ -1,6 +1,6 @@
 ﻿namespace Fritz.InstantAPIs.Generators.Diagnostics;
 
-internal static class DescriptorConstants
+public static class DescriptorConstants
 {
-   internal const string Usage = nameof(DescriptorConstants.Usage);
+	public const string Usage = nameof(DescriptorConstants.Usage);
 }
