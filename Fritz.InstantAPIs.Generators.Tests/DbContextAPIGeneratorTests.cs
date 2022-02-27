@@ -39,6 +39,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 
@@ -55,6 +58,13 @@ namespace MyApplication
 	{{
 		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<CustomerContextTables>>? options = null)
 		{{
+			ILogger logger = NullLogger.Instance;
+			if (app.ServiceProvider is not null)
+			{{
+				var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();
+				logger = loggerFactory.CreateLogger(""InstantAPIs"");
+			}}
+			
 			var builder = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>();
 			if (options is not null) {{ options(builder); }}
 			var config = builder.Build();
@@ -65,18 +75,24 @@ namespace MyApplication
 			{{
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{{
-					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+					var url = tableContacts.RouteGet.Invoke(tableContacts.Name);
+					app.MapGet(url, ([FromServices] CustomerContext db) =>
 						Results.Ok(db.Contacts));
+					
+					logger.LogInformation($""Created API: HTTP GET\t{{url}}"");
 				}}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
 				{{
-					app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					var url = tableContacts.RouteGetById.Invoke(tableContacts.Name);
+					app.MapGet(url, async ([FromServices] CustomerContext db, [FromRoute] string id) =>
 					{{
 						var outValue = await db.Contacts.FindAsync({idParseMethod});
 						if (outValue is null) {{ return Results.NotFound(); }}
 						return Results.Ok(outValue);
 					}});
+					
+					logger.LogInformation($""Created API: HTTP GET\t{{url}}"");
 				}}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
@@ -89,31 +105,39 @@ namespace MyApplication
 						var id = newObj.Id;
 						return Results.Created($""{{url}}/{{id}}"", newObj);
 					}});
+					
+					logger.LogInformation($""Created API: HTTP POST\t{{url}}"");
 				}}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
 				{{
-					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					var url = tableContacts.RoutePut.Invoke(tableContacts.Name);
+					app.MapPut(url, async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 					{{
 						db.Contacts.Attach(newObj);
 						db.Entry(newObj).State = EntityState.Modified;
 						await db.SaveChangesAsync();
 						return Results.NoContent();
 					}});
+					
+					logger.LogInformation($""Created API: HTTP PUT\t{{url}}"");
 				}}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Delete))
 				{{
-					app.MapDelete(tableContacts.RouteDeleteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					var url = tableContacts.RouteDeleteById.Invoke(tableContacts.Name);
+					app.MapDelete(url, async ([FromServices] CustomerContext db, [FromRoute] string id) =>
 					{{
 						Contact? obj = await db.Contacts.FindAsync({idParseMethod});
 						
-						if (obj == null) {{ return Results.NotFound(); }}
+						if (obj is null) {{ return Results.NotFound(); }}
 						
 						db.Contacts.Remove(obj);
 						await db.SaveChangesAsync();
 						return Results.NoContent();
 					}});
+					
+					logger.LogInformation($""Created API: HTTP DELETE\t{{url}}"");
 				}}
 			}}
 			
@@ -159,6 +183,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 
@@ -175,6 +202,13 @@ namespace MyApplication
 	{
 		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<CustomerContextTables>>? options = null)
 		{
+			ILogger logger = NullLogger.Instance;
+			if (app.ServiceProvider is not null)
+			{
+				var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();
+				logger = loggerFactory.CreateLogger(""InstantAPIs"");
+			}
+			
 			var builder = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>();
 			if (options is not null) { options(builder); }
 			var config = builder.Build();
@@ -185,19 +219,25 @@ namespace MyApplication
 			{
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{
-					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+					var url = tableContacts.RouteGet.Invoke(tableContacts.Name);
+					app.MapGet(url, ([FromServices] CustomerContext db) =>
 						Results.Ok(db.Contacts));
+					
+					logger.LogInformation($""Created API: HTTP GET\t{url}"");
 				}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
 				{
-					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					var url = tableContacts.RoutePut.Invoke(tableContacts.Name);
+					app.MapPut(url, async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 					{
 						db.Contacts.Attach(newObj);
 						db.Entry(newObj).State = EntityState.Modified;
 						await db.SaveChangesAsync();
 						return Results.NoContent();
 					});
+					
+					logger.LogInformation($""Created API: HTTP PUT\t{url}"");
 				}
 			}
 			
@@ -214,6 +254,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 
@@ -230,6 +273,13 @@ namespace MyApplication
 	{
 		public static IEndpointRouteBuilder MapPersonContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<PersonContextTables>>? options = null)
 		{
+			ILogger logger = NullLogger.Instance;
+			if (app.ServiceProvider is not null)
+			{
+				var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();
+				logger = loggerFactory.CreateLogger(""InstantAPIs"");
+			}
+			
 			var builder = new InstanceAPIGeneratorConfigBuilder<PersonContextTables>();
 			if (options is not null) { options(builder); }
 			var config = builder.Build();
@@ -240,19 +290,25 @@ namespace MyApplication
 			{
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{
-					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] PersonContext db) =>
+					var url = tableContacts.RouteGet.Invoke(tableContacts.Name);
+					app.MapGet(url, ([FromServices] PersonContext db) =>
 						Results.Ok(db.Contacts));
+					
+					logger.LogInformation($""Created API: HTTP GET\t{url}"");
 				}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
 				{
-					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] PersonContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					var url = tableContacts.RoutePut.Invoke(tableContacts.Name);
+					app.MapPut(url, async ([FromServices] PersonContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 					{
 						db.Contacts.Attach(newObj);
 						db.Entry(newObj).State = EntityState.Modified;
 						await db.SaveChangesAsync();
 						return Results.NoContent();
 					});
+					
+					logger.LogInformation($""Created API: HTTP PUT\t{url}"");
 				}
 			}
 			
@@ -300,6 +356,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 
@@ -316,6 +375,13 @@ namespace MyApplication
 	{
 		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<CustomerContextTables>>? options = null)
 		{
+			ILogger logger = NullLogger.Instance;
+			if (app.ServiceProvider is not null)
+			{
+				var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();
+				logger = loggerFactory.CreateLogger(""InstantAPIs"");
+			}
+			
 			var builder = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>();
 			if (options is not null) { options(builder); }
 			var config = builder.Build();
@@ -326,18 +392,24 @@ namespace MyApplication
 			{
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{
-					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+					var url = tableContacts.RouteGet.Invoke(tableContacts.Name);
+					app.MapGet(url, ([FromServices] CustomerContext db) =>
 						Results.Ok(db.Contacts));
+					
+					logger.LogInformation($""Created API: HTTP GET\t{url}"");
 				}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.GetById))
 				{
-					app.MapGet(tableContacts.RouteGetById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					var url = tableContacts.RouteGetById.Invoke(tableContacts.Name);
+					app.MapGet(url, async ([FromServices] CustomerContext db, [FromRoute] string id) =>
 					{
 						var outValue = await db.Contacts.FindAsync(int.Parse(id));
 						if (outValue is null) { return Results.NotFound(); }
 						return Results.Ok(outValue);
 					});
+					
+					logger.LogInformation($""Created API: HTTP GET\t{url}"");
 				}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Insert))
@@ -350,31 +422,39 @@ namespace MyApplication
 						var id = newObj.Unique;
 						return Results.Created($""{url}/{id}"", newObj);
 					});
+					
+					logger.LogInformation($""Created API: HTTP POST\t{url}"");
 				}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
 				{
-					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					var url = tableContacts.RoutePut.Invoke(tableContacts.Name);
+					app.MapPut(url, async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 					{
 						db.Contacts.Attach(newObj);
 						db.Entry(newObj).State = EntityState.Modified;
 						await db.SaveChangesAsync();
 						return Results.NoContent();
 					});
+					
+					logger.LogInformation($""Created API: HTTP PUT\t{url}"");
 				}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Delete))
 				{
-					app.MapDelete(tableContacts.RouteDeleteById.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id) =>
+					var url = tableContacts.RouteDeleteById.Invoke(tableContacts.Name);
+					app.MapDelete(url, async ([FromServices] CustomerContext db, [FromRoute] string id) =>
 					{
 						Contact? obj = await db.Contacts.FindAsync(int.Parse(id));
 						
-						if (obj == null) { return Results.NotFound(); }
+						if (obj is null) { return Results.NotFound(); }
 						
 						db.Contacts.Remove(obj);
 						await db.SaveChangesAsync();
 						return Results.NoContent();
 					});
+					
+					logger.LogInformation($""Created API: HTTP DELETE\t{url}"");
 				}
 			}
 			
@@ -419,6 +499,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using MyTableTypes;
 using System;
 using System.Collections.Generic;
@@ -436,6 +519,13 @@ namespace MyApplication
 	{
 		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<CustomerContextTables>>? options = null)
 		{
+			ILogger logger = NullLogger.Instance;
+			if (app.ServiceProvider is not null)
+			{
+				var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();
+				logger = loggerFactory.CreateLogger(""InstantAPIs"");
+			}
+			
 			var builder = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>();
 			if (options is not null) { options(builder); }
 			var config = builder.Build();
@@ -446,19 +536,25 @@ namespace MyApplication
 			{
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{
-					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+					var url = tableContacts.RouteGet.Invoke(tableContacts.Name);
+					app.MapGet(url, ([FromServices] CustomerContext db) =>
 						Results.Ok(db.Contacts));
+					
+					logger.LogInformation($""Created API: HTTP GET\t{url}"");
 				}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
 				{
-					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					var url = tableContacts.RoutePut.Invoke(tableContacts.Name);
+					app.MapPut(url, async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 					{
 						db.Contacts.Attach(newObj);
 						db.Entry(newObj).State = EntityState.Modified;
 						await db.SaveChangesAsync();
 						return Results.NoContent();
 					});
+					
+					logger.LogInformation($""Created API: HTTP PUT\t{url}"");
 				}
 			}
 			
@@ -522,6 +618,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 
@@ -538,6 +637,13 @@ namespace MyApplication
 	{
 		public static IEndpointRouteBuilder MapCustomerContextToAPIs(this IEndpointRouteBuilder app, Action<InstanceAPIGeneratorConfigBuilder<CustomerContextTables>>? options = null)
 		{
+			ILogger logger = NullLogger.Instance;
+			if (app.ServiceProvider is not null)
+			{
+				var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();
+				logger = loggerFactory.CreateLogger(""InstantAPIs"");
+			}
+			
 			var builder = new InstanceAPIGeneratorConfigBuilder<CustomerContextTables>();
 			if (options is not null) { options(builder); }
 			var config = builder.Build();
@@ -548,19 +654,25 @@ namespace MyApplication
 			{
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Get))
 				{
-					app.MapGet(tableContacts.RouteGet.Invoke(tableContacts.Name), ([FromServices] CustomerContext db) =>
+					var url = tableContacts.RouteGet.Invoke(tableContacts.Name);
+					app.MapGet(url, ([FromServices] CustomerContext db) =>
 						Results.Ok(db.Contacts));
+					
+					logger.LogInformation($""Created API: HTTP GET\t{url}"");
 				}
 				
 				if (tableContacts.APIs.HasFlag(ApisToGenerate.Update))
 				{
-					app.MapPut(tableContacts.RoutePut.Invoke(tableContacts.Name), async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
+					var url = tableContacts.RoutePut.Invoke(tableContacts.Name);
+					app.MapPut(url, async ([FromServices] CustomerContext db, [FromRoute] string id, [FromBody] Contact newObj) =>
 					{
 						db.Contacts.Attach(newObj);
 						db.Entry(newObj).State = EntityState.Modified;
 						await db.SaveChangesAsync();
 						return Results.NoContent();
 					});
+					
+					logger.LogInformation($""Created API: HTTP PUT\t{url}"");
 				}
 			}
 			

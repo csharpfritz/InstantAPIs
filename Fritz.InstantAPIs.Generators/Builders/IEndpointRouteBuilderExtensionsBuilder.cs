@@ -17,8 +17,17 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
+			indentWriter.WriteLine("ILogger logger = NullLogger.Instance;");
+			indentWriter.WriteLine("if (app.ServiceProvider is not null)");
+			indentWriter.WriteLine("{");
+			indentWriter.Indent++;
+
 			indentWriter.WriteLine("var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();");
-			indentWriter.WriteLine("var logger = loggerFactory.CreateLogger(\"InstantAPIs\");");
+			indentWriter.WriteLine("logger = loggerFactory.CreateLogger(\"InstantAPIs\");");
+
+			indentWriter.Indent--;
+			indentWriter.WriteLine("}");
+			indentWriter.WriteLine();
 
 			indentWriter.WriteLine($"var builder = new InstanceAPIGeneratorConfigBuilder<{type.Name}Tables>();");
 			indentWriter.WriteLine("if (options is not null) { options(builder); }");
@@ -74,14 +83,18 @@ namespace Fritz.InstantAPIs.Generators.Builders
 
 		private static void BuildGet(IndentedTextWriter indentWriter, INamedTypeSymbol type, TableData table, string tableVariableName)
 		{
-			indentWriter.WriteLine("logger.LogInformation(\"HTTP GET made\");");
 			indentWriter.WriteLine($"if ({tableVariableName}.APIs.HasFlag(ApisToGenerate.Get))");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
-			indentWriter.WriteLine($"app.MapGet({tableVariableName}.RouteGet.Invoke({tableVariableName}.Name), ([FromServices] {type.Name} db) =>");
+
+			indentWriter.WriteLine($"var url = {tableVariableName}.RouteGet.Invoke({tableVariableName}.Name);");
+			indentWriter.WriteLine($"app.MapGet(url, ([FromServices] {type.Name} db) =>");
 			indentWriter.Indent++;
 			indentWriter.WriteLine($"Results.Ok(db.{table.Name}));");
 			indentWriter.Indent--;
+			indentWriter.WriteLine();
+			indentWriter.WriteLine("logger.LogInformation($\"Created API: HTTP GET\\t{url}\");");
+
 			indentWriter.Indent--;
 			indentWriter.WriteLine("}");
 		}
@@ -91,7 +104,9 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine($"if ({tableVariableName}.APIs.HasFlag(ApisToGenerate.GetById))");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
-			indentWriter.WriteLine($"app.MapGet({tableVariableName}.RouteGetById.Invoke({tableVariableName}.Name), async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
+
+			indentWriter.WriteLine($"var url = {tableVariableName}.RouteGetById.Invoke({tableVariableName}.Name);");
+			indentWriter.WriteLine($"app.MapGet(url, async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
@@ -102,6 +117,9 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.Indent--;
 			indentWriter.WriteLine("});");
 
+			indentWriter.WriteLine();
+			indentWriter.WriteLine("logger.LogInformation($\"Created API: HTTP GET\\t{url}\");");
+
 			indentWriter.Indent--;
 			indentWriter.WriteLine("}");
 		}
@@ -111,6 +129,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine($"if ({tableVariableName}.APIs.HasFlag(ApisToGenerate.Insert))");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
+
 			indentWriter.WriteLine($"var url = {tableVariableName}.RoutePost.Invoke({tableVariableName}.Name);");
 			indentWriter.WriteLine($"app.MapPost(url, async ([FromServices] {type.Name} db, [FromBody] {table.PropertyType.Name} newObj) =>");
 			indentWriter.WriteLine("{");
@@ -125,6 +144,10 @@ namespace Fritz.InstantAPIs.Generators.Builders
 
 			indentWriter.Indent--;
 			indentWriter.WriteLine("});");
+
+			indentWriter.WriteLine();
+			indentWriter.WriteLine("logger.LogInformation($\"Created API: HTTP POST\\t{url}\");");
+
 			indentWriter.Indent--;
 			indentWriter.WriteLine("}");
 		}
@@ -134,7 +157,9 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine($"if ({tableVariableName}.APIs.HasFlag(ApisToGenerate.Update))");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
-			indentWriter.WriteLine($"app.MapPut({tableVariableName}.RoutePut.Invoke({tableVariableName}.Name), async ([FromServices] {type.Name} db, [FromRoute] string id, [FromBody] {table.PropertyType.Name} newObj) =>");
+
+			indentWriter.WriteLine($"var url = {tableVariableName}.RoutePut.Invoke({tableVariableName}.Name);");
+			indentWriter.WriteLine($"app.MapPut(url, async ([FromServices] {type.Name} db, [FromRoute] string id, [FromBody] {table.PropertyType.Name} newObj) =>");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
@@ -145,6 +170,10 @@ namespace Fritz.InstantAPIs.Generators.Builders
 
 			indentWriter.Indent--;
 			indentWriter.WriteLine("});");
+
+			indentWriter.WriteLine();
+			indentWriter.WriteLine("logger.LogInformation($\"Created API: HTTP PUT\\t{url}\");");
+
 			indentWriter.Indent--;
 			indentWriter.WriteLine("}");
 		}
@@ -154,13 +183,15 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine($"if ({tableVariableName}.APIs.HasFlag(ApisToGenerate.Delete))");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
-			indentWriter.WriteLine($"app.MapDelete({tableVariableName}.RouteDeleteById.Invoke({tableVariableName}.Name), async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
+
+			indentWriter.WriteLine($"var url = {tableVariableName}.RouteDeleteById.Invoke({tableVariableName}.Name);");
+			indentWriter.WriteLine($"app.MapDelete(url, async ([FromServices] {type.Name} db, [FromRoute] string id) =>");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
 			indentWriter.WriteLine($"{table.PropertyType.Name}? obj = await db.{table.Name}.FindAsync({GetIdParseCode(table.IdType!)});");
 			indentWriter.WriteLine();
-			indentWriter.WriteLine("if (obj == null) { return Results.NotFound(); }");
+			indentWriter.WriteLine("if (obj is null) { return Results.NotFound(); }");
 			indentWriter.WriteLine();
 			indentWriter.WriteLine($"db.{table.Name}.Remove(obj);");
 			indentWriter.WriteLine("await db.SaveChangesAsync();");
@@ -168,6 +199,10 @@ namespace Fritz.InstantAPIs.Generators.Builders
 
 			indentWriter.Indent--;
 			indentWriter.WriteLine("});");
+
+			indentWriter.WriteLine();
+			indentWriter.WriteLine("logger.LogInformation($\"Created API: HTTP DELETE\\t{url}\");");
+
 			indentWriter.Indent--;
 			indentWriter.WriteLine("}");
 		}

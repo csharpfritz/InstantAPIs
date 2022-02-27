@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -49,7 +52,11 @@ namespace Fritz.InstantAPIs.Generators.Tests
 				typeof(Included).Assembly,
 				typeof(IEndpointRouteBuilder).Assembly,
 				typeof(RouteData).Assembly,
-				typeof(Results).Assembly
+				typeof(Results).Assembly,
+				typeof(NullLogger).Assembly,
+				typeof(ILogger).Assembly,
+				typeof(ServiceProviderServiceExtensions).Assembly,
+				//typeof(IServiceProvider).Assembly
 			};
 
 			foreach(var referencedAssembly in referencedAssemblies)
