@@ -2,6 +2,8 @@ using Fritz.InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using WorkingApi;
 
+[assembly: InstantAPIsForDbContext(typeof(MyContext))]
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<MyContext>(
