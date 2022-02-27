@@ -1,25 +1,21 @@
 using Fritz.InstantAPIs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 using WorkingApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSqlite<MyContext>("Data Source=contacts.db");
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddInstantAPIs();
 
 var app = builder.Build();
 
 var sw = Stopwatch.StartNew();
 
-app.MapInstantAPIs<MyContext>(options =>
+app.MapInstantAPIs<MyContext>(config =>
 {
-	options.IncludeTable(db => db.Contacts, (ApiMethodsToGenerate.GetById | ApiMethodsToGenerate.Get));
+	config.IncludeTable(db => db.Contacts, ApiMethodsToGenerate.All);
 });
-Console.WriteLine($"Elapsed time to build InstantAPIs: {sw.Elapsed}");
-
-app.UseSwagger();
-app.UseSwaggerUI();
 
 app.Run();

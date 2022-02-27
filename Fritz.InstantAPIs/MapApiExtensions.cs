@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 
 namespace Fritz.InstantAPIs;
 
@@ -13,12 +14,16 @@ internal class MapApiExtensions
 	// TODO: Authentication / Authorization
 	private static Dictionary<Type, PropertyInfo> _IdLookup = new();
 
-	internal static void Initialize<D,C>() 
+  private static ILogger Logger;
+
+	internal static void Initialize<D,C>(ILogger logger) 
 		where D: DbContext
 		where C: class 
 	{
 
-		var theType = typeof(C);
+		Logger = logger;
+
+    var theType = typeof(C);
 		var idProp = theType.GetProperty("id", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) ?? theType.GetProperties().FirstOrDefault(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute)));
 
 		if (idProp != null)
@@ -33,6 +38,7 @@ internal class MapApiExtensions
 		where D : DbContext where C : class
 	{
 
+		Logger.LogInformation($"Created API: HTTP GET\t{url}");
 		app.MapGet(url, ([FromServices] D db) =>
 		{
 			return Results.Ok(db.Set<C>());
@@ -50,6 +56,8 @@ internal class MapApiExtensions
 		var idProp = _IdLookup[theType];
 
 		if (idProp == null) return;
+
+		Logger.LogInformation($"Created API: HTTP GET\t{url}/{{id}}");
 
 		app.MapGet($"{url}/{{id}}", async ([FromServices] D db, [FromRoute] string id) =>
 		{
@@ -76,6 +84,7 @@ internal class MapApiExtensions
 		where D : DbContext where C : class
 	{
 
+		Logger.LogInformation($"Created API: HTTP POST\t{url}");
 
 		app.MapPost(url, async ([FromServices] D db, [FromBody] C newObj) =>
 		{
@@ -92,6 +101,7 @@ internal class MapApiExtensions
 		where D : DbContext where C : class
 	{
 
+		Logger.LogInformation($"Created API: HTTP PUT\t{url}");
 
 		app.MapPut($"{url}/{{id}}", async ([FromServices] D db, [FromRoute] string id, [FromBody] C newObj) =>
 		{
@@ -113,6 +123,7 @@ internal class MapApiExtensions
 		var idProp = _IdLookup[theType];
 
 		if (idProp == null) return;
+		Logger.LogInformation($"Created API: HTTP DELETE\t{url}");
 
 		app.MapDelete($"{url}/{{id}}", async ([FromServices] D db, [FromRoute] string id) =>
 		{
