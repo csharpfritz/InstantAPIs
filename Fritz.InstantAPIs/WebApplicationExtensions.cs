@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 
@@ -8,6 +9,8 @@ namespace Microsoft.AspNetCore.Builder;
 
 public static class WebApplicationExtensions
 {
+	
+	internal const string LOGGER_CATEGORY_NAME = "InstantAPI";
 
 	private static InstantAPIsConfig Configuration { get; set; } = new();
 
@@ -33,6 +36,9 @@ public static class WebApplicationExtensions
 	private static void MapInstantAPIsUsingReflection<D>(IEndpointRouteBuilder app, IEnumerable<TypeTable> requestedTables) where D : DbContext
 	{
 
+		var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();
+		var logger = loggerFactory.CreateLogger(LOGGER_CATEGORY_NAME);
+
 		var allMethods = typeof(MapApiExtensions).GetMethods(BindingFlags.NonPublic | BindingFlags.Static).Where(m => m.Name.StartsWith("Map")).ToArray();
 		var initialize = typeof(MapApiExtensions).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Static);
 		foreach (var table in requestedTables)
@@ -41,7 +47,7 @@ public static class WebApplicationExtensions
 			// The default URL for an InstantAPI is /api/TABLENAME
 			var url = $"/api/{table.Name}";
 
-			initialize.MakeGenericMethod(typeof(D), table.InstanceType).Invoke(null, null);
+			initialize.MakeGenericMethod(typeof(D), table.InstanceType).Invoke(null, new[] { logger });
 
 			// The remaining private static methods in this class build out the Mapped API methods..
 			// let's use some reflection to get them
