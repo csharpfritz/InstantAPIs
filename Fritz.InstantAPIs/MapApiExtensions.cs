@@ -13,7 +13,8 @@ internal class MapApiExtensions
 
 	// TODO: Authentication / Authorization
 	private static Dictionary<Type, PropertyInfo> _IdLookup = new();
-	private static ILogger Logger;
+
+  private static ILogger Logger;
 
 	internal static void Initialize<D,C>(ILogger logger) 
 		where D: DbContext
@@ -21,7 +22,8 @@ internal class MapApiExtensions
 	{
 
 		Logger = logger;
-		var theType = typeof(C);
+
+    var theType = typeof(C);
 		var idProp = theType.GetProperty("id", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) ?? theType.GetProperties().FirstOrDefault(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute)));
 
 		if (idProp != null)
