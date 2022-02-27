@@ -28,7 +28,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestJson", "TestJson\TestJson.csproj", "{99D818F8-63A2-4004-87AB-CA61E1B125CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkingApi.Generators", "WorkingApi.Generators\WorkingApi.Generators.csproj", "{4BDA89CB-733A-49DE-A5C5-D4695EB8A483}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkingApi.Generators", "WorkingApi.Generators\WorkingApi.Generators.csproj", "{4BDA89CB-733A-49DE-A5C5-D4695EB8A483}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fritz.InstantAPIs.Generators.Helpers.Tests", "Fritz.InstantAPIs.Generators.Helpers.Tests\Fritz.InstantAPIs.Generators.Helpers.Tests.csproj", "{0F5A7147-94E3-4BAA-AC94-A6EBD44B8966}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +70,10 @@ Global
 		{4BDA89CB-733A-49DE-A5C5-D4695EB8A483}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BDA89CB-733A-49DE-A5C5-D4695EB8A483}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BDA89CB-733A-49DE-A5C5-D4695EB8A483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F5A7147-94E3-4BAA-AC94-A6EBD44B8966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F5A7147-94E3-4BAA-AC94-A6EBD44B8966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F5A7147-94E3-4BAA-AC94-A6EBD44B8966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F5A7147-94E3-4BAA-AC94-A6EBD44B8966}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

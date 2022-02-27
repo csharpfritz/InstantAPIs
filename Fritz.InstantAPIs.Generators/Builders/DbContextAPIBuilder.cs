@@ -45,6 +45,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 				namespaces.Add("System.Collections.Generic");
 				namespaces.Add("Fritz.InstantAPIs.Generators.Helpers");
 				namespaces.Add("Microsoft.EntityFrameworkCore");
+				namespaces.Add("Microsoft.Extensions.Logging");
 				namespaces.Add("Microsoft.AspNetCore.Builder");
 				namespaces.Add("Microsoft.AspNetCore.Mvc");
 				namespaces.Add("Microsoft.AspNetCore.Routing");

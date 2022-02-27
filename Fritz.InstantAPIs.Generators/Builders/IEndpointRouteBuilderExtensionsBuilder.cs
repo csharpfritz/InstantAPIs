@@ -17,6 +17,9 @@ namespace Fritz.InstantAPIs.Generators.Builders
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
 
+			indentWriter.WriteLine("var loggerFactory = app.ServiceProvider.GetRequiredService<ILoggerFactory>();");
+			indentWriter.WriteLine("var logger = loggerFactory.CreateLogger(\"InstantAPIs\");");
+
 			indentWriter.WriteLine($"var builder = new InstanceAPIGeneratorConfigBuilder<{type.Name}Tables>();");
 			indentWriter.WriteLine("if (options is not null) { options(builder); }");
 			indentWriter.WriteLine("var config = builder.Build();");
@@ -71,6 +74,7 @@ namespace Fritz.InstantAPIs.Generators.Builders
 
 		private static void BuildGet(IndentedTextWriter indentWriter, INamedTypeSymbol type, TableData table, string tableVariableName)
 		{
+			indentWriter.WriteLine("logger.LogInformation(\"HTTP GET made\");");
 			indentWriter.WriteLine($"if ({tableVariableName}.APIs.HasFlag(ApisToGenerate.Get))");
 			indentWriter.WriteLine("{");
 			indentWriter.Indent++;
