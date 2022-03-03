@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fritz.InstantAPIs\Fritz.InstantAPIs.csproj" />
+	  <ProjectReference Include="..\Fritz.InstantAPIs\Fritz.InstantAPIs.csproj" />
   </ItemGroup>
 
 </Project>
