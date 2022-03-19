@@ -7,14 +7,14 @@
 
 This article contains two different ways to get an instant API:
 
-- An API based on a `DbContext`, it will generate the routes it needs given a database class.
+- An API based on a `DbContext`, it will generate the routes it needs given a database class. There are two implementations of this: Reflection and a source generator.
 - An API based on a JSON file.
 
 ## DbContext based API
 
-A proof-of-concept library that generates Minimal API endpoints for an Entity Framework context.  
+A proof-of-concept library that generates Minimal API endpoints for an Entity Framework context. Right now, there are two implementations of this: one that uses Reflection (this is the one currently in the NuGet package), the other uses a source generator. Let's see how both of them work.
 
-For a given Entity Framework context, MyContext
+For a given Entity Framework context, `MyContext`
 
 ```csharp
 public class MyContext : DbContext 
@@ -27,7 +27,7 @@ public class MyContext : DbContext
 }
 ```
 
-We can generate all of the standard CRUD API endpoints using this syntax in `Program.cs`
+We can generate all of the standard CRUD API endpoints with the Reflection approach using this syntax in `Program.cs`
 
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +42,38 @@ app.Run();
 ```
 
 Now we can navigate to `/api/Contacts` and see all of the Contacts in the database.  We can filter for a specific Contact by navigating to `/api/Contacts/1` to get just the first contact returned.  We can also post to `/api/Contacts` and add a new Contact to the database. Since there are multiple `DbSet`, you can make the same calls to `/api/Addresses`.
+
+You can also customize the APIs if you want
+```csharp
+app.MapInstantAPIs<MyContext>(config =>
+{
+	config.IncludeTable(db => db.Contacts, ApiMethodsToGenerate.All, "addressBook");
+});
+```
+
+This specifies that the all of the CRUD methods should be created for the `Contacts` table, and it prepends the routes with `addressBook`.
+
+The source generator approach has an example in the `WorkingApi.Generators` project (at the moment a NuGet package hasn't been created for this implementation). You specify which `DbContext` classes you want to map with the `InstantAPIsForDbContextAttribute`, For each context, an extension method named `Map{DbContextName]ToAPIs` is created. The end result is similar to the Reflection approach:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSqlite<MyContext>("Data Source=contacts.db");
+
+var app = builder.Build();
+
+app.MapMyContextToAPIs();
+
+app.Run();
+```
+
+You can also do customization as well
+```csharp
+app.MapMyContextToAPIs(options =>
+	options.Include(MyContext.Contacts, "addressBook", ApisToGenerate.Get));
+```
+
+Feel free to try both approaches and let Fritz know if you have any issues with either one of them. The intent is to keep feature parity between the two for the forseable future.
 
 ### Demo
 
