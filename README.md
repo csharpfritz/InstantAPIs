@@ -53,9 +53,11 @@ app.MapInstantAPIs<MyContext>(config =>
 
 This specifies that the all of the CRUD methods should be created for the `Contacts` table, and it prepends the routes with `addressBook`.
 
-The source generator approach has an example in the `WorkingApi.Generators` project (at the moment a NuGet package hasn't been created for this implementation). You specify which `DbContext` classes you want to map with the `InstantAPIsForDbContextAttribute`, For each context, an extension method named `Map{DbContextName]ToAPIs` is created. The end result is similar to the Reflection approach:
+The source generator approach has an example in the `WorkingApi.Generators` project (at the moment a NuGet package hasn't been created for this implementation). You specify which `DbContext` classes you want to map with the `InstantAPIsForDbContextAttribute`, For each context, an extension method named `Map{DbContextName}ToAPIs` is created. The end result is similar to the Reflection approach:
 
 ```csharp
+[assembly: InstantAPIsForDbContext(typeof(MyContext))]
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSqlite<MyContext>("Data Source=contacts.db");
