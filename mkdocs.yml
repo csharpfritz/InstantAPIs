@@ -1,0 +1,64 @@
+site_name: InstantAPIs
+site_description: A library to generate RESTful APIs with 1 line of code
+site_author: Jeffrey T. Fritz
+site_url: https://csharpfritz.github.io/Fritz.InstantAPIs/
+edit_uri: edit/dev/docs/
+docs_dir: docs
+
+repo_name: csharpfritz/InstantAPIs
+repo_url: https://github.com/csharpfritz/InstantAPIs
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/csharpfritz/InstantAPIs
+
+theme:
+    name: material
+    language: en
+    palette:
+      scheme: default
+      primary: indigo
+      accent: indigo
+    font:
+      text: Roboto
+      code: Roboto Mono
+    logo: assets/logo.png
+    favicon: assets/favicon.ico
+    include_search_page: false
+    search_index_only: true
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - markdown_include.include:
+      base_path: docs
+  - meta
+  - pymdownx.details
+  - pymdownx.tabbed
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - toc:
+      permalink: true
+
+plugins:
+  - exclude:
+      glob:
+        - "_overrides/*"
+        - "Dockerfile"
+  - git-revision-date-localized:
+      type: iso_datetime
+  - macros
+  - search:
+      prebuild_index: python
+      lang:
+        - en
+
+nav:
+  - Home: README.md
