@@ -16,6 +16,7 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 	private D _TheContext;
 	private readonly HashSet<TableApiMapping> _IncludedTables = new();
 	private readonly List<string> _ExcludedTables = new();
+	private const string DEFAULT_URI = "/api/";
 
 	public InstantAPIsConfigBuilder(D theContext)
 	{
@@ -30,13 +31,30 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 	/// <param name="entitySelector">Select the EntityFramework DbSet to include - Required</param>
 	/// <param name="methodsToGenerate">A flags enumerable indicating the methods to generate.  By default ALL are generated</param>
 	/// <returns>Configuration builder with this configuration applied</returns>
-	public InstantAPIsConfigBuilder<D> IncludeTable<T>(Func<D, DbSet<T>> entitySelector, ApiMethodsToGenerate methodsToGenerate = ApiMethodsToGenerate.All) where T : class
+	public InstantAPIsConfigBuilder<D> IncludeTable<T>(Func<D, DbSet<T>> entitySelector, ApiMethodsToGenerate methodsToGenerate = ApiMethodsToGenerate.All, string baseUrl = "") where T : class
 	{
 
 		var theSetType = entitySelector(_TheContext).GetType().BaseType;
 		var property = _ContextType.GetProperties().First(p => p.PropertyType == theSetType);
 
-		var tableApiMapping = new TableApiMapping(property.Name, methodsToGenerate);
+		if (!string.IsNullOrEmpty(baseUrl))
+		{
+			try
+			{
+				var testUri = new Uri(baseUrl, UriKind.RelativeOrAbsolute);
+				baseUrl = testUri.IsAbsoluteUri ? testUri.LocalPath : baseUrl;
+			}
+			catch
+			{
+				throw new ArgumentException(nameof(baseUrl), "Not a valid Uri");
+			}
+		}
+		else
+		{
+			baseUrl = String.Concat(DEFAULT_URI, property.Name);
+		}
+
+		var tableApiMapping = new TableApiMapping(property.Name, methodsToGenerate, baseUrl);
 		_IncludedTables.Add(tableApiMapping);
 
 		if (_ExcludedTables.Contains(tableApiMapping.TableName)) _ExcludedTables.Remove(tableApiMapping.TableName);
@@ -68,35 +86,33 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 	{
 
 		var tables = WebApplicationExtensions.GetDbTablesForContext<D>().ToArray();
-
-		if (!_IncludedTables.Any() && !_ExcludedTables.Any())
-		{
-			_Config.Tables.UnionWith(tables.Select(t => new WebApplicationExtensions.TypeTable
-			{
-				Name = t.Name,
-				InstanceType = t.InstanceType,
-				ApiMethodsToGenerate = ApiMethodsToGenerate.All
-			}));
-			return;
-		}
+		WebApplicationExtensions.TypeTable[]? outTables;
 
 		// Add the Included tables
-		var outTables = tables.Where(t => _IncludedTables.Any(i => i.TableName.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)))
-			.Select(t => new WebApplicationExtensions.TypeTable
-			{
-				Name = t.Name,
-				InstanceType = t.InstanceType,
-				ApiMethodsToGenerate = _IncludedTables.First(i => i.TableName.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)).MethodsToGenerate
-			}).ToArray();
-
-		// If no tables were added, added them all
-		if (outTables.Length == 0)
+		if (_IncludedTables.Any())
 		{
+			outTables = tables.Where(t => _IncludedTables.Any(i => i.TableName.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)))
+				.Select(t => new WebApplicationExtensions.TypeTable
+				{
+					Name = t.Name,
+					InstanceType = t.InstanceType,
+					ApiMethodsToGenerate = _IncludedTables.First(i => i.TableName.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)).MethodsToGenerate,
+					BaseUrl = new Uri(_IncludedTables.First(i => i.TableName.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)).BaseUrl, UriKind.Relative)
+				}).ToArray();
+		} else { 
 			outTables = tables.Select(t => new WebApplicationExtensions.TypeTable
 			{
 				Name = t.Name,
-				InstanceType = t.InstanceType
+				InstanceType = t.InstanceType,
+				BaseUrl = new Uri(DEFAULT_URI + t.Name, uriKind: UriKind.Relative)
 			}).ToArray();
+		}
+
+		// Exit now if no tables were excluded
+		if (!_ExcludedTables.Any())
+		{
+			_Config.Tables.UnionWith(outTables);
+			return;
 		}
 
 		// Remove the Excluded tables

@@ -15,7 +15,7 @@ var sw = Stopwatch.StartNew();
 
 app.MapInstantAPIs<MyContext>(config =>
 {
-	config.IncludeTable(db => db.Contacts, ApiMethodsToGenerate.All);
+	config.IncludeTable(db => db.Contacts, ApiMethodsToGenerate.All, "addressBook");
 });
 
 app.Run();

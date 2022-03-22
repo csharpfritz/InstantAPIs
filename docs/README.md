@@ -1,10 +1,3 @@
-# InstantAPIs
-
-[![Nuget](https://img.shields.io/nuget/v/Fritz.InstantAPIs)](https://www.nuget.org/packages/Fritz.InstantAPIs/)
-![GitHub branch checks state](https://img.shields.io/github/checks-status/csharpfritz/InstantAPIs/main)
-![GitHub last commit](https://img.shields.io/github/last-commit/csharpfritz/InstantAPIs)
-![GitHub contributors](https://img.shields.io/github/contributors/csharpfritz/InstantAPIs)
-
 This article contains two different ways to get an instant API:
 
 - An API based on a `DbContext`, it will generate the routes it needs given a database class. There are two implementations of this: Reflection and a source generator.
@@ -174,14 +167,3 @@ app.MapGet("/", () => "Hello World!");
 app.UseJsonRoutes();
 app.Run();
 ```
-
-### Coming features
-
-Support for:
-
-- [query parameters](https://github.com/csharpfritz/InstantAPIs/issues/40)
-- [PUT](https://github.com/csharpfritz/InstantAPIs/issues/39)
-
-## Community
-
-This project is covered by a [code of conduct](https://github.com/csharpfritz/InstantAPIs/blob/main/CODE-OF-CONDUCT.md) that all contributors must abide by.  [Contributions are welcome and encouraged.](https://github.com/csharpfritz/InstantAPIs/blob/main/CONTRIBUTING.md).

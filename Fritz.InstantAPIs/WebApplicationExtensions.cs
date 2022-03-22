@@ -50,7 +50,7 @@ public static class WebApplicationExtensions
 		{
 
 			// The default URL for an InstantAPI is /api/TABLENAME
-			var url = $"/api/{table.Name}";
+			//var url = $"/api/{table.Name}";
 
 			initialize.MakeGenericMethod(typeof(D), table.InstanceType).Invoke(null, new[] { logger });
 
@@ -64,7 +64,7 @@ public static class WebApplicationExtensions
 				if ((table.ApiMethodsToGenerate & methodType) != methodType) continue;
 
 				var genericMethod = method.MakeGenericMethod(typeof(D), table.InstanceType);
-				genericMethod.Invoke(null, new object[] { app, url });
+				genericMethod.Invoke(null, new object[] { app, table.BaseUrl.ToString() });
 			}
 
 		}
@@ -100,7 +100,11 @@ public static class WebApplicationExtensions
 	{
 		return typeof(D).GetProperties(BindingFlags.Instance | BindingFlags.Public)
 								.Where(x => x.PropertyType.FullName.StartsWith("Microsoft.EntityFrameworkCore.DbSet"))
-								.Select(x => new TypeTable { Name = x.Name, InstanceType = x.PropertyType.GenericTypeArguments.First() })
+								.Select(x => new TypeTable { 
+									Name = x.Name, 
+									InstanceType = x.PropertyType.GenericTypeArguments.First(),
+									BaseUrl = new Uri($"/api/{x.Name}", uriKind: UriKind.RelativeOrAbsolute)
+								})
 								.ToArray();
 	}
 
@@ -109,6 +113,7 @@ public static class WebApplicationExtensions
 		public string Name { get; set; }
 		public Type InstanceType { get; set; }
 		public ApiMethodsToGenerate ApiMethodsToGenerate { get; set; } = ApiMethodsToGenerate.All;
+		public Uri BaseUrl { get; set; }
 	}
 
 }
