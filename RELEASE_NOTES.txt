@@ -4,3 +4,5 @@
 - Added the ability to create APIs from JSON files on disk		
 - Added ability to specify OpenAPI configuration
 - Added Logging for reflection API generation
+- Added Codegen APIs
+- Added JSON mock APIs
