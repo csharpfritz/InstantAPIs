@@ -1,7 +1,7 @@
 # InstantAPIs
 
 [![Nuget](https://img.shields.io/nuget/v/Fritz.InstantAPIs)](https://www.nuget.org/packages/Fritz.InstantAPIs/)
-![GitHub branch checks state](https://img.shields.io/github/checks-status/csharpfritz/InstantAPIs/main)
+[![Instant APIs Documentation](https://img.shields.io/badge/docs-ready!-blue)](https://csharpfritz.github.io/InstantAPIs)
 ![GitHub last commit](https://img.shields.io/github/last-commit/csharpfritz/InstantAPIs)
 ![GitHub contributors](https://img.shields.io/github/contributors/csharpfritz/InstantAPIs)
 
