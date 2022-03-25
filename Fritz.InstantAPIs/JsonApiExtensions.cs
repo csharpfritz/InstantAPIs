@@ -101,7 +101,7 @@ public static class JsonApiExtensions
 
 			File.WriteAllText(_Config.JsonFilename, writableDoc.ToString());
 
-			return "TODO";
+			return "OK";
         });
 
       if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Delete) == ApiMethodsToGenerate.Delete)
