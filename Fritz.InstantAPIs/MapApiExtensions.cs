@@ -95,7 +95,7 @@ internal class MapApiExtensions
 		});
 
 	}
-
+	
 	[ApiMethod(ApiMethodsToGenerate.Update)]
 	internal static void MapInstantPut<D, C>(IEndpointRouteBuilder app, string url)
 		where D : DbContext where C : class
