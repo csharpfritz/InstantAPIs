@@ -1,29 +1,10 @@
 ﻿using InstantAPIs;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Test.Configuration;
 
-public class WithOnlyIncludes : BaseFixture
+public class WithOnlyIncludes : InstantAPIsConfigBuilderFixture
 {
-
-	InstantAPIsConfigBuilder<MyContext> _Builder;
-
-	public WithOnlyIncludes()
-	{
-
-		var _ContextOptions = new DbContextOptionsBuilder<MyContext>()
-		.UseInMemoryDatabase("TestDb")
-		.Options;
-		_Builder = new(new(_ContextOptions));
-
-	}
 
 	[Fact]
 	public void ShouldNotIncludeAllTables()

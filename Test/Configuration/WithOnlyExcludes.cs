@@ -1,25 +1,9 @@
-﻿using InstantAPIs;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using Xunit;
+﻿using Xunit;
 
 namespace Test.Configuration;
 
-public class WithOnlyExcludes : BaseFixture
+public class WithOnlyExcludes : InstantAPIsConfigBuilderFixture
 {
-
-	InstantAPIsConfigBuilder<MyContext> _Builder;
-
-	public WithOnlyExcludes()
-	{
-
-		var _ContextOptions = new DbContextOptionsBuilder<MyContext>()
-		.UseInMemoryDatabase("TestDb")
-		.Options;
-		_Builder = new(new(_ContextOptions));
-
-	}
 
 	[Fact]
 	public void ShouldExcludeSpecifiedTable()
@@ -52,4 +36,3 @@ public class WithOnlyExcludes : BaseFixture
 	}
 
 }
-
