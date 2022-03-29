@@ -1,17 +1,9 @@
 ﻿namespace InstantAPIs;
 
-internal class InstantAPIsConfig
-{
-
-	internal HashSet<WebApplicationExtensions.TypeTable> Tables { get; } = new HashSet<WebApplicationExtensions.TypeTable>();
-
-}
-
-
 public class InstantAPIsConfigBuilder<D> where D : DbContext
 {
 
-	private InstantAPIsConfig _Config = new();
+	private HashSet<WebApplicationExtensions.TypeTable> _Config = new();
 	private Type _ContextType = typeof(D);
 	private D _TheContext;
 	private readonly HashSet<TableApiMapping> _IncludedTables = new();
@@ -111,7 +103,7 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 		// Exit now if no tables were excluded
 		if (!_ExcludedTables.Any())
 		{
-			_Config.Tables.UnionWith(outTables);
+			_Config.UnionWith(outTables);
 			return;
 		}
 
@@ -120,13 +112,13 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 
 		if (outTables == null || !outTables.Any()) throw new ArgumentException("All tables were excluded from this configuration");
 
-		_Config.Tables.UnionWith(outTables);
+		_Config.UnionWith(outTables);
 
 	}
 
 #endregion
 
-	internal InstantAPIsConfig Build()
+	internal HashSet<WebApplicationExtensions.TypeTable> Build()
 	{
 
 		BuildTables();

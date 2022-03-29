@@ -14,7 +14,7 @@ public static class WebApplicationExtensions
 	
 	internal const string LOGGER_CATEGORY_NAME = "InstantAPI";
 
-	private static InstantAPIsConfig Configuration { get; set; } = new();
+	private static HashSet<WebApplicationExtensions.TypeTable> Configuration { get; set; } = new();
 
 	public static IEndpointRouteBuilder MapInstantAPIs<D>(this IEndpointRouteBuilder app, Action<InstantAPIsConfigBuilder<D>> options = null) where D : DbContext
 	{
@@ -26,9 +26,9 @@ public static class WebApplicationExtensions
 		// Get the tables on the DbContext
 		var dbTables = GetDbTablesForContext<D>();
 
-		var requestedTables = !Configuration.Tables.Any() ?
+		var requestedTables = !Configuration.Any() ?
 				dbTables :
-				Configuration.Tables.Where(t => dbTables.Any(db => db.Name.Equals(t.Name, StringComparison.OrdinalIgnoreCase))).ToArray();
+				Configuration.Where(t => dbTables.Any(db => db.Name.Equals(t.Name, StringComparison.OrdinalIgnoreCase))).ToArray();
 
 		MapInstantAPIsUsingReflection<D>(app, requestedTables);
 

@@ -17,8 +17,8 @@ public class WithOnlyIncludes : InstantAPIsConfigBuilderFixture
 		var config = _Builder.Build();
 
 		// assert
-		Assert.Single(config.Tables);
-		Assert.Equal("Contacts", config.Tables.First().Name);
+		Assert.Single(config);
+		Assert.Equal("Contacts", config.First().Name);
 
 	}
 
@@ -36,7 +36,7 @@ public class WithOnlyIncludes : InstantAPIsConfigBuilderFixture
 		var config = _Builder.Build();
 
 		// assert
-		Assert.Equal(methodsToGenerate, config.Tables.First().ApiMethodsToGenerate);
+		Assert.Equal(methodsToGenerate, config.First().ApiMethodsToGenerate);
 
 	}
 

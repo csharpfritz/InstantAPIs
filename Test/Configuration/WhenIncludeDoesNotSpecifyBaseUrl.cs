@@ -16,8 +16,8 @@ public class WhenIncludeDoesNotSpecifyBaseUrl : InstantAPIsConfigBuilderFixture
 		var config = _Builder.Build();
 
 		// assert
-		Assert.Single(config.Tables);
-		Assert.Equal(new Uri("/api/Contacts", uriKind: UriKind.Relative), config.Tables.First().BaseUrl);
+		Assert.Single(config);
+		Assert.Equal(new Uri("/api/Contacts", uriKind: UriKind.Relative), config.First().BaseUrl);
 
 	}
 }

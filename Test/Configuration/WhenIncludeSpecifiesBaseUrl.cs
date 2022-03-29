@@ -17,8 +17,8 @@ public class WhenIncludeSpecifiesBaseUrl : InstantAPIsConfigBuilderFixture
 		var config = _Builder.Build();
 
 		// assert
-		Assert.Single(config.Tables);
-		Assert.Equal(BaseUrl, config.Tables.First().BaseUrl);
+		Assert.Single(config);
+		Assert.Equal(BaseUrl, config.First().BaseUrl);
 
 	}
 }

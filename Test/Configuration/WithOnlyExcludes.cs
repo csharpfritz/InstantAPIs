@@ -16,8 +16,8 @@ public class WithOnlyExcludes : InstantAPIsConfigBuilderFixture
 		var config = _Builder.Build();
 
 		// assert
-		Assert.Single(config.Tables);
-		Assert.Equal("Contacts", config.Tables.First().Name);
+		Assert.Single(config);
+		Assert.Equal("Contacts", config.First().Name);
 
 	}
 

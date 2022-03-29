@@ -32,9 +32,9 @@ public class WithoutIncludes : BaseFixture
 		var config = _Builder.Build();
 
 		// assert
-		Assert.Equal(2, config.Tables.Count);
-		Assert.Equal(ApiMethodsToGenerate.All, config.Tables.First().ApiMethodsToGenerate);
-		Assert.Equal(ApiMethodsToGenerate.All, config.Tables.Skip(1).First().ApiMethodsToGenerate);
+		Assert.Equal(2, config.Count);
+		Assert.Equal(ApiMethodsToGenerate.All, config.First().ApiMethodsToGenerate);
+		Assert.Equal(ApiMethodsToGenerate.All, config.Skip(1).First().ApiMethodsToGenerate);
 
 	}
 
