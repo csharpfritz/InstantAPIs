@@ -8,7 +8,6 @@
 		Insert = 4,
 		Update = 8,
 		Delete = 16,
-		Put=24,
 		All = 31
 	}
 }

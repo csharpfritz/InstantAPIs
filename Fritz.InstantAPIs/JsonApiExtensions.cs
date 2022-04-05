@@ -40,7 +40,7 @@ public static class JsonApiExtensions
         Console.WriteLine(string.Format("POST /{0}", elem.Key.ToLower()));
 
    	  if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Update) == ApiMethodsToGenerate.Update)
-		Console.WriteLine(string.Format("PUT /{0}", elem.Key.ToLower()));
+	  	Console.WriteLine(string.Format("PUT /{0}", elem.Key.ToLower()));
 
 	  if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Delete) == ApiMethodsToGenerate.Delete)
         Console.WriteLine(string.Format("DELETE /{0}", elem.Key.ToLower()) + "/id");
@@ -87,7 +87,7 @@ public static class JsonApiExtensions
           return content;
         });
 
-      if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Put) == ApiMethodsToGenerate.Put)
+      if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Update) == ApiMethodsToGenerate.Update)
 		app.MapPut(string.Format("/{0}", elem.Key), async (HttpRequest request) =>
 		{
 			string content = string.Empty;
