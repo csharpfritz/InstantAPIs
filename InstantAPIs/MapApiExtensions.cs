@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace InstantAPIs;
 
@@ -14,7 +15,7 @@ internal class MapApiExtensions
 	// TODO: Authentication / Authorization
 	private static Dictionary<Type, PropertyInfo> _IdLookup = new();
 
-  private static ILogger Logger;
+  private static ILogger Logger = NullLogger.Instance;
 
 	internal static void Initialize<D,C>(ILogger logger) 
 		where D: DbContext
@@ -62,7 +63,7 @@ internal class MapApiExtensions
 		app.MapGet($"{url}/{{id}}", async ([FromServices] D db, [FromRoute] string id) =>
 		{
 
-			C outValue = default(C);
+			var outValue = default(C);
 			if (idProp.PropertyType == typeof(Guid))
 				outValue = await db.Set<C>().FindAsync(Guid.Parse(id));
 			else if (idProp.PropertyType == typeof(int))
@@ -91,7 +92,7 @@ internal class MapApiExtensions
 			db.Add(newObj);
 			await db.SaveChangesAsync();
 			var id = _IdLookup[typeof(C)].GetValue(newObj);
-			return Results.Created($"{url}/{id.ToString()}", newObj);
+			return Results.Created($"{url}/{id}", newObj);
 		});
 
 	}

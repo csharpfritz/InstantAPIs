@@ -16,7 +16,7 @@ public class JsonAPIsConfigBuilder
 {
 
 	private JsonAPIsConfig _Config = new();
-	private string _FileName;
+	private string? _FileName;
 	private readonly HashSet<TableApiMapping> _IncludedTables = new();
 	private readonly List<string> _ExcludedTables = new();
 
@@ -63,12 +63,12 @@ public class JsonAPIsConfigBuilder
 
 	private HashSet<string> IdentifyEntities()
 	{
-		var writableDoc = JsonNode.Parse(File.ReadAllText(_FileName));
+		var writableDoc = JsonNode.Parse(File.ReadAllText(_Config.JsonFilename));
 
 		// print API
 		return writableDoc?.Root.AsObject()
 			.AsEnumerable().Select(x => x.Key)
-			.ToHashSet();
+			.ToHashSet() ?? new HashSet<string>();
 
 	}
 
@@ -106,7 +106,7 @@ public class JsonAPIsConfigBuilder
 		}
 
 		// Remove the Excluded tables
-		outTables = outTables.Where(t => !_ExcludedTables.Any(e => t.Name.Equals(e, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+		outTables = outTables.Where(t => !_ExcludedTables.Any(e => e.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase))).ToArray();
 
 		if (outTables == null || !outTables.Any()) throw new ArgumentException("All tables were excluded from this configuration");
 

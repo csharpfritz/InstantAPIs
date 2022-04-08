@@ -2,7 +2,8 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
-	</PropertyGroup>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+  </PropertyGroup>
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
