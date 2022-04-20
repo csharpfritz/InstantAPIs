@@ -16,7 +16,7 @@ public static class WebApplicationExtensions
 
 	private static HashSet<WebApplicationExtensions.TypeTable> Configuration { get; set; } = new();
 
-	public static IEndpointRouteBuilder MapInstantAPIs<D>(this IEndpointRouteBuilder app, Action<InstantAPIsConfigBuilder<D>> options = null) where D : DbContext
+	public static IEndpointRouteBuilder MapInstantAPIs<D>(this IEndpointRouteBuilder app, Action<InstantAPIsBuilder<D>> options = null) where D : DbContext
 	{
 		if (app is IApplicationBuilder applicationBuilder)
 		{
@@ -71,7 +71,7 @@ public static class WebApplicationExtensions
 		}
 	}
 
-	private static void AddOpenAPIConfiguration<D>(IEndpointRouteBuilder app, Action<InstantAPIsConfigBuilder<D>> options, IApplicationBuilder applicationBuilder) where D : DbContext
+	private static void AddOpenAPIConfiguration<D>(IEndpointRouteBuilder app, Action<InstantAPIsBuilder<D>> options, IApplicationBuilder applicationBuilder) where D : DbContext
 	{
 		// Check if AddInstantAPIs was called by getting the service options and evaluate EnableSwagger property
 		var serviceOptions = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<InstantAPIsServiceOptions>>().Value;
@@ -89,7 +89,7 @@ public static class WebApplicationExtensions
 		}
 
 		var ctx = applicationBuilder.ApplicationServices.CreateScope().ServiceProvider.GetService(typeof(D)) as D;
-		var builder = new InstantAPIsConfigBuilder<D>(ctx);
+		var builder = new InstantAPIsBuilder<D>(ctx);
 		if (options != null)
 		{
 			options(builder);

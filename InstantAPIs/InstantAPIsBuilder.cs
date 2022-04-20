@@ -1,6 +1,6 @@
-﻿namespace InstantAPIs;
+﻿namespace Microsoft.AspNetCore.Builder;
 
-public class InstantAPIsConfigBuilder<D> where D : DbContext
+public class InstantAPIsBuilder<D> where D : DbContext
 {
 
 	private HashSet<WebApplicationExtensions.TypeTable> _Config = new();
@@ -10,7 +10,7 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 	private readonly List<string> _ExcludedTables = new();
 	private const string DEFAULT_URI = "/api/";
 
-	public InstantAPIsConfigBuilder(D theContext)
+	public InstantAPIsBuilder(D theContext)
 	{
 		this._TheContext = theContext;
 	}
@@ -23,7 +23,7 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 	/// <param name="entitySelector">Select the EntityFramework DbSet to include - Required</param>
 	/// <param name="methodsToGenerate">A flags enumerable indicating the methods to generate.  By default ALL are generated</param>
 	/// <returns>Configuration builder with this configuration applied</returns>
-	public InstantAPIsConfigBuilder<D> IncludeTable<T>(Func<D, DbSet<T>> entitySelector, ApiMethodsToGenerate methodsToGenerate = ApiMethodsToGenerate.All, string baseUrl = "") where T : class
+	public InstantAPIsBuilder<D> IncludeTable<T>(Func<D, DbSet<T>> entitySelector, ApiMethodsToGenerate methodsToGenerate = ApiMethodsToGenerate.All, string baseUrl = "") where T : class
 	{
 
 		var theSetType = entitySelector(_TheContext).GetType().BaseType;
@@ -61,7 +61,7 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 	/// </summary>
 	/// <param name="entitySelector">Select the entity to exclude from generation</param>
 	/// <returns>Configuration builder with this configuraiton applied</returns>
-	public InstantAPIsConfigBuilder<D> ExcludeTable<T>(Func<D, DbSet<T>> entitySelector) where T : class
+	public InstantAPIsBuilder<D> ExcludeTable<T>(Func<D, DbSet<T>> entitySelector) where T : class
 	{
 
 		var theSetType = entitySelector(_TheContext).GetType().BaseType;

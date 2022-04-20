@@ -1,11 +1,11 @@
-﻿using InstantAPIs;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 
 namespace Test.Configuration;
 
 public abstract class InstantAPIsConfigBuilderFixture : BaseFixture
 {
-	internal InstantAPIsConfigBuilder<MyContext> _Builder;
+	internal InstantAPIsBuilder<MyContext> _Builder;
 
 	public InstantAPIsConfigBuilderFixture()
 	{

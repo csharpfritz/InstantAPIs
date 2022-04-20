@@ -9,7 +9,7 @@ namespace Test.Configuration;
 public class WithoutIncludes : BaseFixture
 {
 
-	InstantAPIsConfigBuilder<MyContext> _Builder;
+	InstantAPIsBuilder<MyContext> _Builder;
 
 	public WithoutIncludes()
 	{
