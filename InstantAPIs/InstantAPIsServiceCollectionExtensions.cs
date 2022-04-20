@@ -4,9 +4,9 @@ namespace InstantAPIs;
 
 public static class InstantAPIsServiceCollectionExtensions
 {
-    public static IServiceCollection AddInstantAPIs(this IServiceCollection services, Action<InstantAPIsServiceOptions>? setupAction = null)
+    public static IServiceCollection AddInstantAPIs(this IServiceCollection services, Action<InstantAPIsOptions>? setupAction = null)
     {
-        var options = new InstantAPIsServiceOptions();
+        var options = new InstantAPIsOptions();
 
         // Get the service options
         setupAction?.Invoke(options);
@@ -24,7 +24,7 @@ public static class InstantAPIsServiceCollectionExtensions
         }
 
         // Register the required options so that it can be accessed by InstantAPIs middleware
-        services.Configure<InstantAPIsServiceOptions>(config =>
+        services.Configure<InstantAPIsOptions>(config =>
         {
             config.EnableSwagger = options.EnableSwagger;
         });

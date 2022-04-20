@@ -9,7 +9,7 @@ public enum EnableSwagger
     Always
 }
 
-public class InstantAPIsServiceOptions
+public class InstantAPIsOptions
 {
 
     public EnableSwagger? EnableSwagger { get; set; }

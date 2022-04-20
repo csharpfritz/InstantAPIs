@@ -76,7 +76,7 @@ public static class WebApplicationExtensions
 	private static void AddOpenAPIConfiguration<D>(IEndpointRouteBuilder app, Action<InstantAPIsBuilder<D>>? options, IApplicationBuilder applicationBuilder) where D : DbContext
 	{
 		// Check if AddInstantAPIs was called by getting the service options and evaluate EnableSwagger property
-		var serviceOptions = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<InstantAPIsServiceOptions>>().Value;
+		var serviceOptions = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<InstantAPIsOptions>>().Value;
 		if (serviceOptions == null || serviceOptions.EnableSwagger == null)
 		{
 			throw new ArgumentException("Call builder.Services.AddInstantAPIs(options) before MapInstantAPIs.");
