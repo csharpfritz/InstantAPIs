@@ -1,7 +1,7 @@
 site_name: InstantAPIs
 site_description: A library to generate RESTful APIs with 1 line of code
 site_author: Jeffrey T. Fritz
-site_url: https://csharpfritz.github.io/Fritz.InstantAPIs/
+site_url: https://csharpfritz.github.io/InstantAPIs/
 edit_uri: edit/dev/docs/
 docs_dir: docs
 

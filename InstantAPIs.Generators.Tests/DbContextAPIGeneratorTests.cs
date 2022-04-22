@@ -1,4 +1,4 @@
-﻿using Fritz.InstantAPIs.Generators.Diagnostics;
+﻿using InstantAPIs.Generators.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Testing;
 using System;
@@ -18,7 +18,7 @@ public static class DbContextAPIGeneratorTests
 	public static async Task GenerateWhenDbContextExists(string idType, string idParseMethod)
 	{
 		var code =
-$@"using Fritz.InstantAPIs.Generators.Helpers;
+$@"using InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
 using System;
@@ -39,7 +39,7 @@ namespace MyApplication
 	}}
 }}";
 		var generatedCode =
-$@"using Fritz.InstantAPIs.Generators.Helpers;
+$@"using InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -162,7 +162,7 @@ namespace MyApplication
 	public static async Task GenerateWhenMultipleDbContextsExists()
 	{
 		var code =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
 using System;
@@ -188,7 +188,7 @@ namespace MyApplication
 	}
 }";
 		var customerGeneratedCode =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -259,7 +259,7 @@ namespace MyApplication
 ";
 
 		var personGeneratedCode =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -342,7 +342,7 @@ namespace MyApplication
 	public static async Task GenerateWhenIdentifierUsesKeyAttribute()
 	{
 		var code =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
 using System;
@@ -365,7 +365,7 @@ namespace MyApplication
 	}
 }";
 		var generatedCode =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -488,7 +488,7 @@ namespace MyApplication
 	public static async Task GenerateWhenTableTypeNamespaceIsDifferentThanDbContextNamespace()
 	{
 		var code =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
 using MyTableTypes;
@@ -512,7 +512,7 @@ namespace MyTableTypes
 	}
 }";
 		var generatedCode =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -616,7 +616,7 @@ namespace MyApplication
 	public static async Task GenerateWhenTypeGivenInAttributeIsNotDbContext()
 	{
 		var code =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 
 [assembly: InstantAPIsForDbContext(typeof(string))]";
 
@@ -632,7 +632,7 @@ namespace MyApplication
 	public static async Task GenerateWhenDbContextExistsAndDoesNotHaveIdProperty()
 	{
 		var code =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
 
@@ -651,7 +651,7 @@ namespace MyApplication
 	}
 }";
 		var generatedCode =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -730,7 +730,7 @@ namespace MyApplication
 	public static async Task GenerateWhenMultipleAttributeDefinitionsExist()
 	{
 		var code =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using MyApplication;
 
@@ -750,7 +750,7 @@ namespace MyApplication
 	}
 }";
 		var generatedCode =
-@"using Fritz.InstantAPIs.Generators.Helpers;
+@"using InstantAPIs.Generators.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

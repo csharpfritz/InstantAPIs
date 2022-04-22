@@ -30,7 +30,7 @@ The folders are a basic structure which will change as needed to support the pro
 
 ```
 
-  Fritz.InstantAPIs               The project code.
+  InstantAPIs                     The project code.
   WorkingApi                      The project to prototype and manually test the functionality being developed.
 
 ```
