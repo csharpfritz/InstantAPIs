@@ -38,7 +38,10 @@ public static class JsonApiExtensions
       if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Insert) == ApiMethodsToGenerate.Insert)
         Console.WriteLine(string.Format("POST /{0}", elem.Key.ToLower()));
 
-      if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Delete) == ApiMethodsToGenerate.Delete)
+   	  if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Update) == ApiMethodsToGenerate.Update)
+	  	Console.WriteLine(string.Format("PUT /{0}", elem.Key.ToLower()));
+
+	  if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Delete) == ApiMethodsToGenerate.Delete)
         Console.WriteLine(string.Format("DELETE /{0}", elem.Key.ToLower()) + "/id");
 
       Console.WriteLine(" ");
@@ -84,9 +87,20 @@ public static class JsonApiExtensions
         });
 
       if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Update) == ApiMethodsToGenerate.Update)
-        app.MapPut(string.Format("/{0}", elem.Key), () =>
-        {
-          return "TODO";
+		app.MapPut(string.Format("/{0}", elem.Key), async (HttpRequest request) =>
+		{
+			string content = string.Empty;
+			using (StreamReader reader = new StreamReader(request.Body))
+			{
+				content = await reader.ReadToEndAsync();
+			}
+			var newNode = JsonNode.Parse(content);
+			var array = elem.Value.AsArray();
+			array.Add(newNode);
+
+			File.WriteAllText(_Config.JsonFilename, writableDoc.ToString());
+
+			return "OK";
         });
 
       if ((thisEntity.ApiMethodsToGenerate & ApiMethodsToGenerate.Delete) == ApiMethodsToGenerate.Delete)
