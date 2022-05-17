@@ -1,4 +1,4 @@
-﻿using Fritz.InstantAPIs;
+﻿using InstantAPIs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
