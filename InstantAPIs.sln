@@ -5,18 +5,18 @@ VisualStudioVersion = 17.2.32216.311
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkingApi", "WorkingApi\WorkingApi.csproj", "{67B3C4BF-3F0F-4179-8B43-008F0B18761A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fritz.InstantAPIs", "Fritz.InstantAPIs\Fritz.InstantAPIs.csproj", "{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantAPIs", "InstantAPIs\InstantAPIs.csproj", "{C945FAF9-D8A9-48EE-8A19-4AB0996CABEC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{CDEC8FD4-C50A-4FCA-BF93-6C7AA3F24BB4}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yaml = .github\workflows\build.yaml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fritz.InstantAPIs.Generators", "Fritz.InstantAPIs.Generators\Fritz.InstantAPIs.Generators.csproj", "{56ABEEC4-77C0-42CE-A68B-592E4705D90E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantAPIs.Generators", "InstantAPIs.Generators\InstantAPIs.Generators.csproj", "{56ABEEC4-77C0-42CE-A68B-592E4705D90E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fritz.InstantAPIs.Generators.Tests", "Fritz.InstantAPIs.Generators.Tests\Fritz.InstantAPIs.Generators.Tests.csproj", "{EE295501-1A67-4E55-A1AD-B98C290F604D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantAPIs.Generators.Tests", "InstantAPIs.Generators.Tests\InstantAPIs.Generators.Tests.csproj", "{EE295501-1A67-4E55-A1AD-B98C290F604D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fritz.InstantAPIs.Generators.Helpers", "Fritz.InstantAPIs.Generators.Helpers\Fritz.InstantAPIs.Generators.Helpers.csproj", "{2FF08F79-C2C5-4DD4-9A95-EABFA09A054C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantAPIs.Generators.Helpers", "InstantAPIs.Generators.Helpers\InstantAPIs.Generators.Helpers.csproj", "{2FF08F79-C2C5-4DD4-9A95-EABFA09A054C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C73968E9-8A12-401C-BA5D-127C6D5A55D6}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestJson", "TestJson\TestJs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkingApi.Generators", "WorkingApi.Generators\WorkingApi.Generators.csproj", "{4BDA89CB-733A-49DE-A5C5-D4695EB8A483}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fritz.InstantAPIs.Generators.Helpers.Tests", "Fritz.InstantAPIs.Generators.Helpers.Tests\Fritz.InstantAPIs.Generators.Helpers.Tests.csproj", "{0F5A7147-94E3-4BAA-AC94-A6EBD44B8966}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstantAPIs.Generators.Helpers.Tests", "InstantAPIs.Generators.Helpers.Tests\InstantAPIs.Generators.Helpers.Tests.csproj", "{0F5A7147-94E3-4BAA-AC94-A6EBD44B8966}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

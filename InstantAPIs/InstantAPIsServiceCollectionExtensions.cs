@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace InstantAPIs;
 
 public static class InstantAPIsServiceCollectionExtensions
 {

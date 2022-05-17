@@ -1,4 +1,4 @@
-using Fritz.InstantAPIs;
+using InstantAPIs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics;

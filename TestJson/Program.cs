@@ -1,4 +1,4 @@
-using Mock;
+using InstantAPIs;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();

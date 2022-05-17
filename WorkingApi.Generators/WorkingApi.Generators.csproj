@@ -10,7 +10,7 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Fritz.InstantAPIs.Generators.Helpers\Fritz.InstantAPIs.Generators.Helpers.csproj" />
-		<ProjectReference Include="..\Fritz.InstantAPIs.Generators\Fritz.InstantAPIs.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" SetTargetFramework="TargetFramework=netstandard2.0" />
+		<ProjectReference Include="..\InstantAPIs.Generators.Helpers\InstantAPIs.Generators.Helpers.csproj" />
+		<ProjectReference Include="..\InstantAPIs.Generators\InstantAPIs.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" SetTargetFramework="TargetFramework=netstandard2.0" />
 	</ItemGroup>
 </Project>

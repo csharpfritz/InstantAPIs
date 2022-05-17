@@ -1,4 +1,4 @@
-﻿namespace Fritz.InstantAPIs;
+﻿namespace InstantAPIs;
 
 [Flags]
 public enum ApiMethodsToGenerate

@@ -1,4 +1,4 @@
-﻿namespace Microsoft.AspNetCore.Builder;
+﻿namespace InstantAPIs;
 
 internal class InstantAPIsConfig
 {

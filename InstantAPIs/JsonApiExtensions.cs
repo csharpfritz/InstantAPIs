@@ -1,9 +1,8 @@
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json.Nodes;
 
-namespace Mock;
+namespace InstantAPIs;
 
 public static class JsonApiExtensions
 {

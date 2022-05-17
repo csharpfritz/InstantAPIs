@@ -126,10 +126,10 @@ To use this, do the following:
    cd DemoApi 
    ```
 
-1. Add the NuGet package for [Fritz.InstantAPIs](https://www.nuget.org/packages/Fritz.InstantAPIs/):
+1. Add the NuGet package for [InstantAPIs](https://www.nuget.org/packages/InstantAPIs/):
 
    ```bash
-   dotnet add package Fritz.InstantAPIs --prerelease
+   dotnet add package InstantAPIs --prerelease
    ```
 
 1. In *Program.cs*, add the following namespace:

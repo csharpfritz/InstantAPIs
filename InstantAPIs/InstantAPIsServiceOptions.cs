@@ -1,6 +1,6 @@
 ﻿using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Fritz.InstantAPIs;
+namespace InstantAPIs;
 
 public enum EnableSwagger
 {

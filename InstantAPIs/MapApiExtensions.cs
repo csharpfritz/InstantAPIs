@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 
-namespace Fritz.InstantAPIs;
+namespace InstantAPIs;
 
 internal class MapApiExtensions
 {

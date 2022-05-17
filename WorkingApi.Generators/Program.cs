@@ -1,4 +1,4 @@
-using Fritz.InstantAPIs.Generators.Helpers;
+using InstantAPIs.Generators.Helpers;
 using Microsoft.EntityFrameworkCore;
 using WorkingApi;
 
