@@ -1,4 +1,6 @@
-﻿v0.2.0
+﻿v0.2.1
+- Enabled PUT methods with the JSON API
+v0.2.0
 - Introduced a fluent configuration API for defining which tables to include and exclude from the Entity Framework Context.
   - Can specify the BaseUrl for a table's APIs
 - Added the ability to create APIs from JSON files on disk		
