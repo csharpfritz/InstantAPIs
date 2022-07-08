@@ -100,7 +100,8 @@ public static class WebApplicationExtensions
 	internal static IEnumerable<TypeTable> GetDbTablesForContext<D>() where D : DbContext
 	{
 		return typeof(D).GetProperties(BindingFlags.Instance | BindingFlags.Public)
-								.Where(x => x.PropertyType.FullName.StartsWith("Microsoft.EntityFrameworkCore.DbSet"))
+								.Where(x => x.PropertyType.FullName.StartsWith("Microsoft.EntityFrameworkCore.DbSet")
+								&& x.PropertyType.GenericTypeArguments.First().GetCustomAttributes(typeof(KeylessAttribute), true).Length <= 0)
 								.Select(x => new TypeTable { 
 									Name = x.Name, 
 									InstanceType = x.PropertyType.GenericTypeArguments.First(),
