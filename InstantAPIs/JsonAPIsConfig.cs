@@ -1,11 +1,12 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace InstantAPIs;
 
 internal class JsonAPIsConfig
 {
 
-	internal HashSet<WebApplicationExtensions.TypeTable> Tables { get; } = new HashSet<WebApplicationExtensions.TypeTable>();
+	internal HashSet<InstantAPIsOptions.Table> Tables { get; } = new HashSet<InstantAPIsOptions.Table>();
 
 	internal string JsonFilename = "mock.json";
 
@@ -17,7 +18,7 @@ public class JsonAPIsConfigBuilder
 
 	private JsonAPIsConfig _Config = new();
 	private string? _FileName;
-	private readonly HashSet<TableApiMapping> _IncludedTables = new();
+	private readonly HashSet<InstantAPIsOptions.Table> _IncludedTables = new();
 	private readonly List<string> _ExcludedTables = new();
 
 	public JsonAPIsConfigBuilder SetFilename(string fileName)
@@ -37,10 +38,10 @@ public class JsonAPIsConfigBuilder
 	public JsonAPIsConfigBuilder IncludeEntity(string entityName, ApiMethodsToGenerate methodsToGenerate = ApiMethodsToGenerate.All)
 	{
 
-		var tableApiMapping = new TableApiMapping(entityName, methodsToGenerate);
+		var tableApiMapping = new InstantAPIsOptions.Table(entityName, new Uri(entityName, UriKind.Relative), typeof(JsonObject)) { ApiMethodsToGenerate = methodsToGenerate };
 		_IncludedTables.Add(tableApiMapping);
 
-		if (_ExcludedTables.Contains(entityName)) _ExcludedTables.Remove(tableApiMapping.TableName);
+		if (_ExcludedTables.Contains(entityName)) _ExcludedTables.Remove(tableApiMapping.Name);
 
 		return this;
 
@@ -54,7 +55,7 @@ public class JsonAPIsConfigBuilder
 	public JsonAPIsConfigBuilder ExcludeTable(string entityName)
 	{
 
-		if (_IncludedTables.Select(t => t.TableName).Contains(entityName)) _IncludedTables.Remove(_IncludedTables.First(t => t.TableName == entityName));
+		if (_IncludedTables.Select(t => t.Name).Contains(entityName)) _IncludedTables.Remove(_IncludedTables.First(t => t.Name == entityName));
 		_ExcludedTables.Add(entityName);
 
 		return this;
@@ -75,34 +76,26 @@ public class JsonAPIsConfigBuilder
 	private void BuildTables()
 	{
 
-		var tables = IdentifyEntities();
+		var tables = IdentifyEntities()
+			.Select(t => new InstantAPIsOptions.Table(t, new Uri(t, UriKind.Relative), typeof(JsonObject))
+			{
+				ApiMethodsToGenerate = ApiMethodsToGenerate.All
+			});
 
 		if (!_IncludedTables.Any() && !_ExcludedTables.Any())
 		{
-			_Config.Tables.UnionWith(tables.Select(t => new WebApplicationExtensions.TypeTable
-			{
-				Name = t,
-				ApiMethodsToGenerate = ApiMethodsToGenerate.All
-			}));
+			_Config.Tables.UnionWith(tables);
 			return;
 		}
 
 		// Add the Included tables
 		var outTables = _IncludedTables
-			.Select(t => new WebApplicationExtensions.TypeTable
-			{
-				Name = t.TableName,
-				ApiMethodsToGenerate = t.MethodsToGenerate
-			}).ToArray();
+			.ToArray();
 
 		// If no tables were added, added them all
 		if (outTables.Length == 0)
 		{
-			outTables = tables.Select(t => new WebApplicationExtensions.TypeTable
-			{
-				Name = t,
-				ApiMethodsToGenerate = ApiMethodsToGenerate.All
-			}).ToArray();
+			outTables = tables.ToArray();
 		}
 
 		// Remove the Excluded tables

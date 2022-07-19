@@ -14,7 +14,7 @@ public static class WebApplicationExtensions
 	
 	internal const string LOGGER_CATEGORY_NAME = "InstantAPI";
 
-	private static HashSet<WebApplicationExtensions.TypeTable> Configuration { get; set; } = new();
+	private static HashSet<InstantAPIsOptions.Table> Configuration { get; set; } = new();
 
 	public static IEndpointRouteBuilder MapInstantAPIs<D>(this IEndpointRouteBuilder app, Action<InstantAPIsBuilder<D>>? options = null) where D : DbContext
 	{
@@ -35,7 +35,7 @@ public static class WebApplicationExtensions
 		return app;
 	}
 
-	private static void MapInstantAPIsUsingReflection<D>(IEndpointRouteBuilder app, IEnumerable<TypeTable> requestedTables) where D : DbContext
+	private static void MapInstantAPIsUsingReflection<D>(IEndpointRouteBuilder app, IEnumerable<InstantAPIsOptions.Table> requestedTables) where D : DbContext
 	{
 
 		ILogger logger = NullLogger.Instance;
@@ -99,25 +99,13 @@ public static class WebApplicationExtensions
 		}
 	}
 
-	internal static IEnumerable<TypeTable> GetDbTablesForContext<D>() where D : DbContext
+	internal static IEnumerable<InstantAPIsOptions.Table> GetDbTablesForContext<D>() where D : DbContext
 	{
 		return typeof(D).GetProperties(BindingFlags.Instance | BindingFlags.Public)
-								.Where(x => (x.PropertyType.FullName?.StartsWith("Microsoft.EntityFrameworkCore.DbSet")).GetValueOrDefault()
+								.Where(x => (x.PropertyType.FullName?.StartsWith("Microsoft.EntityFrameworkCore.DbSet") ?? false)
 											&& x.PropertyType.GenericTypeArguments.First().GetCustomAttributes(typeof(KeylessAttribute), true).Length <= 0)
-								.Select(x => new TypeTable { 
-									Name = x.Name, 
-									InstanceType = x.PropertyType.GenericTypeArguments.First(),
-									BaseUrl = new Uri($"/api/{x.Name}", uriKind: UriKind.RelativeOrAbsolute)
-								})
+								.Select(x => new InstantAPIsOptions.Table(x.Name, new Uri($"/api/{x.Name}", uriKind: UriKind.RelativeOrAbsolute), x.PropertyType.GenericTypeArguments.First()))
 								.ToArray();
-	}
-
-	internal class TypeTable
-	{
-		public string? Name { get; set; }
-		public Type? InstanceType { get; set; } 
-		public ApiMethodsToGenerate ApiMethodsToGenerate { get; set; } = ApiMethodsToGenerate.All;
-		public Uri? BaseUrl { get; set; }
 	}
 
 }

@@ -3,10 +3,10 @@
 public class InstantAPIsBuilder<D> where D : DbContext
 {
 
-	private HashSet<WebApplicationExtensions.TypeTable> _Config = new();
+	private HashSet<InstantAPIsOptions.Table> _Config = new();
 	private Type _ContextType = typeof(D);
 	private D _TheContext;
-	private readonly HashSet<TableApiMapping> _IncludedTables = new();
+	private readonly HashSet<InstantAPIsOptions.Table> _IncludedTables = new();
 	private readonly List<string> _ExcludedTables = new();
 	private const string DEFAULT_URI = "/api/";
 
@@ -43,13 +43,13 @@ public class InstantAPIsBuilder<D> where D : DbContext
 		}
 		else
 		{
-			baseUrl = String.Concat(DEFAULT_URI, property.Name);
+			baseUrl = string.Concat(DEFAULT_URI, property.Name);
 		}
 
-		var tableApiMapping = new TableApiMapping(property.Name, methodsToGenerate, baseUrl);
+		var tableApiMapping = new InstantAPIsOptions.Table(property.Name, new Uri(baseUrl), typeof(T)) { ApiMethodsToGenerate = methodsToGenerate };
 		_IncludedTables.Add(tableApiMapping);
 
-		if (_ExcludedTables.Contains(tableApiMapping.TableName)) _ExcludedTables.Remove(tableApiMapping.TableName);
+		if (_ExcludedTables.Contains(tableApiMapping.Name)) _ExcludedTables.Remove(tableApiMapping.Name);
 		_IncludedTables.Add(tableApiMapping);
 
 		return this;
@@ -67,7 +67,7 @@ public class InstantAPIsBuilder<D> where D : DbContext
 		var theSetType = entitySelector(_TheContext).GetType().BaseType;
 		var property = _ContextType.GetProperties().First(p => p.PropertyType == theSetType);
 
-		if (_IncludedTables.Select(t => t.TableName).Contains(property.Name)) _IncludedTables.Remove(_IncludedTables.First(t => t.TableName == property.Name));
+		if (_IncludedTables.Select(t => t.Name).Contains(property.Name)) _IncludedTables.Remove(_IncludedTables.First(t => t.Name == property.Name));
 		_ExcludedTables.Add(property.Name);
 
 		return this;
@@ -78,26 +78,18 @@ public class InstantAPIsBuilder<D> where D : DbContext
 	{
 
 		var tables = WebApplicationExtensions.GetDbTablesForContext<D>().ToArray();
-		WebApplicationExtensions.TypeTable[]? outTables;
+		InstantAPIsOptions.Table[]? outTables;
 
 		// Add the Included tables
 		if (_IncludedTables.Any())
 		{
-			outTables = tables.Where(t => _IncludedTables.Any(i => i.TableName.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)))
-				.Select(t => new WebApplicationExtensions.TypeTable
+			outTables = tables.Where(t => _IncludedTables.Any(i => i.Name.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)))
+				.Select(t => new InstantAPIsOptions.Table(t.Name, new Uri(_IncludedTables.First(i => i.Name.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)).BaseUrl.ToString(), UriKind.Relative), t.InstanceType)
 				{
-					Name = t.Name,
-					InstanceType = t.InstanceType,
-					ApiMethodsToGenerate = _IncludedTables.First(i => i.TableName.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)).MethodsToGenerate,
-					BaseUrl = new Uri(_IncludedTables.First(i => i.TableName.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)).BaseUrl, UriKind.Relative)
+					ApiMethodsToGenerate = _IncludedTables.First(i => i.Name.Equals(t.Name, StringComparison.InvariantCultureIgnoreCase)).ApiMethodsToGenerate
 				}).ToArray();
 		} else { 
-			outTables = tables.Select(t => new WebApplicationExtensions.TypeTable
-			{
-				Name = t.Name,
-				InstanceType = t.InstanceType,
-				BaseUrl = new Uri(DEFAULT_URI + t.Name, uriKind: UriKind.Relative)
-			}).ToArray();
+			outTables = tables.Select(t => new InstantAPIsOptions.Table(t.Name, new Uri(DEFAULT_URI + t.Name, uriKind: UriKind.Relative), t.InstanceType)).ToArray();
 		}
 
 		// Exit now if no tables were excluded
@@ -118,7 +110,7 @@ public class InstantAPIsBuilder<D> where D : DbContext
 
 #endregion
 
-	internal HashSet<WebApplicationExtensions.TypeTable> Build()
+	internal HashSet<InstantAPIsOptions.Table> Build()
 	{
 
 		BuildTables();
