@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using InstantAPIs;
+using Xunit;
 
 namespace Test.Configuration;
 
@@ -13,7 +14,7 @@ public class WhenIncludeSpecifiesBaseUrl : InstantAPIsConfigBuilderFixture
 
 		// act
 		var BaseUrl = new Uri("/testapi", UriKind.Relative);
-		_Builder.IncludeTable(db => db.Contacts, baseUrl: BaseUrl.ToString());
+		_Builder.IncludeTable(db => db.Contacts, new InstantAPIsOptions.TableOptions<Contact, int>(), baseUrl: BaseUrl.ToString());
 		var config = _Builder.Build();
 
 		// assert

@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using InstantAPIs;
+using Xunit;
 
 namespace Test.Configuration;
 
@@ -13,8 +14,8 @@ public class WithIncludesAndExcludes : InstantAPIsConfigBuilderFixture
 		// arrange
 
 		// act
-		_Builder.IncludeTable(db => db.Addresses)
-						.IncludeTable(db => db.Contacts)
+		_Builder.IncludeTable(db => db.Addresses, new InstantAPIsOptions.TableOptions<Address, int>())
+						.IncludeTable(db => db.Contacts, new InstantAPIsOptions.TableOptions<Contact, int>())
 						.ExcludeTable(db => db.Addresses);
 		var config = _Builder.Build();
 

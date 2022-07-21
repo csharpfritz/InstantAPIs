@@ -13,7 +13,7 @@ public class WithOnlyIncludes : InstantAPIsConfigBuilderFixture
 		// arrange
 
 		// act
-		_Builder.IncludeTable(db => db.Contacts);
+		_Builder.IncludeTable(db => db.Contacts, new InstantAPIsOptions.TableOptions<Contact, int>());
 		var config = _Builder.Build();
 
 		// assert
@@ -32,7 +32,7 @@ public class WithOnlyIncludes : InstantAPIsConfigBuilderFixture
 		// arrange
 
 		// act
-		_Builder.IncludeTable(db => db.Contacts, methodsToGenerate);
+		_Builder.IncludeTable(db => db.Contacts, new InstantAPIsOptions.TableOptions<Contact, int>(), methodsToGenerate);
 		var config = _Builder.Build();
 
 		// assert

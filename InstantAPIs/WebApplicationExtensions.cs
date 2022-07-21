@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using System.Linq;
 using System.Reflection;
 
 namespace InstantAPIs;
@@ -14,9 +15,9 @@ public static class WebApplicationExtensions
 	
 	internal const string LOGGER_CATEGORY_NAME = "InstantAPI";
 
-	private static HashSet<InstantAPIsOptions.Table> Configuration { get; set; } = new();
+	private static HashSet<InstantAPIsOptions.ITable> Configuration { get; set; } = new();
 
-	public static IEndpointRouteBuilder MapInstantAPIs<D>(this IEndpointRouteBuilder app, Action<InstantAPIsBuilder<D>>? options = null) where D : DbContext
+	public static IEndpointRouteBuilder MapInstantAPIs<TContext>(this IEndpointRouteBuilder app, Action<InstantAPIsBuilder<TContext>>? options = null) where TContext : DbContext
 	{
 		if (app is IApplicationBuilder applicationBuilder)
 		{
@@ -24,18 +25,18 @@ public static class WebApplicationExtensions
 		}
 
 		// Get the tables on the DbContext
-		var dbTables = GetDbTablesForContext<D>();
+		var dbTables = GetDbTablesForContext<TContext>();
 
 		var requestedTables = !Configuration.Any() ?
 				dbTables :
 				Configuration.Where(t => dbTables.Any(db => db.Name != null && db.Name.Equals(t.Name, StringComparison.OrdinalIgnoreCase))).ToArray();
 
-		MapInstantAPIsUsingReflection<D>(app, requestedTables);
+		MapInstantAPIsUsingReflection<TContext>(app, requestedTables);
 
 		return app;
 	}
 
-	private static void MapInstantAPIsUsingReflection<D>(IEndpointRouteBuilder app, IEnumerable<InstantAPIsOptions.Table> requestedTables) where D : DbContext
+	private static void MapInstantAPIsUsingReflection<TContext>(IEndpointRouteBuilder app, IEnumerable<InstantAPIsOptions.ITable> requestedTables) where TContext : DbContext
 	{
 
 		ILogger logger = NullLogger.Instance;
@@ -54,7 +55,7 @@ public static class WebApplicationExtensions
 			// The default URL for an InstantAPI is /api/TABLENAME
 			//var url = $"/api/{table.Name}";
 
-			initialize.MakeGenericMethod(typeof(D), table.InstanceType ?? throw new Exception($"Instance type for table {table.Name} is null")).Invoke(null, new[] { logger });
+			initialize.MakeGenericMethod(typeof(TContext), table.InstanceType ?? throw new Exception($"Instance type for table {table.Name} is null")).Invoke(null, new[] { logger });
 
 			// The remaining private static methods in this class build out the Mapped API methods..
 			// let's use some reflection to get them
@@ -66,14 +67,14 @@ public static class WebApplicationExtensions
 				var methodType = (ApiMethodsToGenerate)sigAttr.Value;
 				if ((table.ApiMethodsToGenerate & methodType) != methodType) continue;
 
-				var genericMethod = method.MakeGenericMethod(typeof(D), table.InstanceType);
+				var genericMethod = method.MakeGenericMethod(typeof(TContext), table.InstanceType);
 				genericMethod.Invoke(null, new object[] { app, table.BaseUrl?.ToString() ?? throw new Exception($"BaseUrl for {table.Name} is null") });
 			}
 
 		}
 	}
 
-	private static void AddOpenAPIConfiguration<D>(IEndpointRouteBuilder app, Action<InstantAPIsBuilder<D>>? options, IApplicationBuilder applicationBuilder) where D : DbContext
+	private static void AddOpenAPIConfiguration<TContext>(IEndpointRouteBuilder app, Action<InstantAPIsBuilder<TContext>>? options, IApplicationBuilder applicationBuilder) where TContext : DbContext
 	{
 		// Check if AddInstantAPIs was called by getting the service options and evaluate EnableSwagger property
 		var serviceOptions = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<InstantAPIsOptions>>().Value;
@@ -90,8 +91,8 @@ public static class WebApplicationExtensions
 			applicationBuilder.UseSwaggerUI();
 		}
 
-		var ctx = applicationBuilder.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<D>();
-		var builder = new InstantAPIsBuilder<D>(ctx);
+		var ctx = applicationBuilder.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<TContext>();
+		var builder = new InstantAPIsBuilder<TContext>(ctx);
 		if (options != null)
 		{
 			options(builder);
@@ -99,12 +100,13 @@ public static class WebApplicationExtensions
 		}
 	}
 
-	internal static IEnumerable<InstantAPIsOptions.Table> GetDbTablesForContext<D>() where D : DbContext
+	internal static IEnumerable<InstantAPIsOptions.ITable> GetDbTablesForContext<TContext>() where TContext : DbContext
 	{
-		return typeof(D).GetProperties(BindingFlags.Instance | BindingFlags.Public)
-								.Where(x => (x.PropertyType.FullName?.StartsWith("Microsoft.EntityFrameworkCore.DbSet") ?? false)
-											&& x.PropertyType.GenericTypeArguments.First().GetCustomAttributes(typeof(KeylessAttribute), true).Length <= 0)
-								.Select(x => new InstantAPIsOptions.Table(x.Name, new Uri($"/api/{x.Name}", uriKind: UriKind.RelativeOrAbsolute), x.PropertyType.GenericTypeArguments.First()))
+		return typeof(TContext).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                                .Where(x => (x.PropertyType.FullName?.StartsWith("Microsoft.EntityFrameworkCore.DbSet") ?? false)
+                                            && x.PropertyType.GenericTypeArguments.First().GetCustomAttributes(typeof(KeylessAttribute), true).Length <= 0)
+                                .Select(x => InstantAPIsBuilder<TContext>.CreateTable(x.Name, new Uri($"/api/{x.Name}", uriKind: UriKind.RelativeOrAbsolute), typeof(TContext), x.PropertyType, x.PropertyType.GenericTypeArguments.First()))
+								.Where(x => x != null).OfType<InstantAPIsOptions.ITable>()
 								.ToArray();
 	}
 

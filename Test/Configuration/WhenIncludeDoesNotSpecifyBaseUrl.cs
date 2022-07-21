@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using InstantAPIs;
+using Xunit;
 
 namespace Test.Configuration;
 
@@ -12,7 +13,7 @@ public class WhenIncludeDoesNotSpecifyBaseUrl : InstantAPIsConfigBuilderFixture
 		// arrange
 
 		// act
-		_Builder.IncludeTable(db => db.Contacts);
+		_Builder.IncludeTable(db => db.Contacts, new InstantAPIsOptions.TableOptions<Contact, int>());
 		var config = _Builder.Build();
 
 		// assert

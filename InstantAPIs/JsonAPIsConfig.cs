@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using Microsoft.Extensions.Options;
 using System.Text.Json.Nodes;
 
 namespace InstantAPIs;
@@ -6,7 +6,7 @@ namespace InstantAPIs;
 internal class JsonAPIsConfig
 {
 
-	internal HashSet<InstantAPIsOptions.Table> Tables { get; } = new HashSet<InstantAPIsOptions.Table>();
+	internal HashSet<InstantAPIsOptions.ITable> Tables { get; } = new HashSet<InstantAPIsOptions.ITable>();
 
 	internal string JsonFilename = "mock.json";
 
@@ -18,7 +18,7 @@ public class JsonAPIsConfigBuilder
 
 	private JsonAPIsConfig _Config = new();
 	private string? _FileName;
-	private readonly HashSet<InstantAPIsOptions.Table> _IncludedTables = new();
+	private readonly HashSet<InstantAPIsOptions.ITable> _IncludedTables = new();
 	private readonly List<string> _ExcludedTables = new();
 
 	public JsonAPIsConfigBuilder SetFilename(string fileName)
@@ -38,7 +38,8 @@ public class JsonAPIsConfigBuilder
 	public JsonAPIsConfigBuilder IncludeEntity(string entityName, ApiMethodsToGenerate methodsToGenerate = ApiMethodsToGenerate.All)
 	{
 
-		var tableApiMapping = new InstantAPIsOptions.Table(entityName, new Uri(entityName, UriKind.Relative), typeof(JsonObject)) { ApiMethodsToGenerate = methodsToGenerate };
+		var tableApiMapping = new InstantAPIsOptions.Table<JsonContext, JsonArray, JsonObject, int>(entityName, new Uri(entityName, UriKind.Relative), c => c.LoadTable(entityName),
+			new InstantAPIsOptions.TableOptions<JsonObject, int>()) { ApiMethodsToGenerate = methodsToGenerate };	
 		_IncludedTables.Add(tableApiMapping);
 
 		if (_ExcludedTables.Contains(entityName)) _ExcludedTables.Remove(tableApiMapping.Name);
@@ -77,7 +78,8 @@ public class JsonAPIsConfigBuilder
 	{
 
 		var tables = IdentifyEntities()
-			.Select(t => new InstantAPIsOptions.Table(t, new Uri(t, UriKind.Relative), typeof(JsonObject))
+			.Select(t => new InstantAPIsOptions.Table<JsonContext, JsonArray, JsonObject, int>(t, new Uri(t, UriKind.Relative), c => c.LoadTable(t),
+			new InstantAPIsOptions.TableOptions<JsonObject, int>())
 			{
 				ApiMethodsToGenerate = ApiMethodsToGenerate.All
 			});
@@ -119,6 +121,29 @@ public class JsonAPIsConfigBuilder
 		BuildTables();
 
 		return _Config;
+	}
+
+	public class JsonContext
+	{
+		const string JSON_FILENAME = "mock.json";
+		private readonly JsonNode _writableDoc;
+
+		public JsonContext()
+		{
+			_writableDoc = JsonNode.Parse(File.ReadAllText(JSON_FILENAME))
+				?? throw new Exception("Invalid json file");
+		}
+
+		public JsonArray LoadTable(string name)
+		{
+			return _writableDoc?.Root.AsObject().AsEnumerable().First(elem => elem.Key == name).Value as JsonArray 
+				?? throw new Exception("No json array");
+		}
+
+		internal void SaveChanges()
+		{
+			File.WriteAllText(JSON_FILENAME, _writableDoc.ToString());
+		}
 	}
 
 }
