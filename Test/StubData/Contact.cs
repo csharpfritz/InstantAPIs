@@ -1,6 +1,6 @@
 ﻿namespace Test.StubData;
 
-internal class Contact
+public class Contact
 {
 
 	public int Id { get; set; }

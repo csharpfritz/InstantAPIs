@@ -12,9 +12,12 @@ public enum EnableSwagger
 
 public class InstantAPIsOptions
 {
+	public Uri DefaultUri = new Uri("/api", UriKind.Relative);
 
-    public EnableSwagger? EnableSwagger { get; set; }
-    public Action<SwaggerGenOptions>? Swagger { get; set; }
+	public EnableSwagger? EnableSwagger { get; set; }
+	public Action<SwaggerGenOptions>? Swagger { get; set; }
+
+	public IEnumerable<ITable> Tables { get; internal set; } = new HashSet<ITable>();
 
 	internal class Table<TContext, TSet, TEntity, TKey>
 		: ITable
