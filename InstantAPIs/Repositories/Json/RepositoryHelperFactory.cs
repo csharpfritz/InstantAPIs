@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 
 namespace InstantAPIs.Repositories.Json;
 
@@ -13,8 +12,8 @@ public class RepositoryHelperFactory :
 	{
 		if (!typeof(TContext).IsAssignableTo(typeof(Context))) throw new ArgumentException("Context needs to derive from JsonContext");
 
-		var newRepositoryType = typeof(JsonRepositoryHelper);
-		var returnValue = Activator.CreateInstance(newRepositoryType, setSelector, config)
+		var newRepositoryType = typeof(RepositoryHelper);
+		var returnValue = Activator.CreateInstance(newRepositoryType, setSelector)
 			?? throw new Exception("Could not create an instance of the JsonRepository implementation");
 
 		return (IRepositoryHelper<TContext, TSet, TEntity, TKey>)returnValue;

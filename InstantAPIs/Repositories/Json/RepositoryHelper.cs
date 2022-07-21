@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 
 namespace InstantAPIs.Repositories.Json;
 
-internal class JsonRepositoryHelper :
+internal class RepositoryHelper :
 	IRepositoryHelper<Context, JsonArray, JsonObject, int>
 {
 	private readonly Func<Context, JsonArray> _setSelector;
-	private readonly InstantAPIsOptions.TableOptions<JsonObject, int> _config;
 
-	public JsonRepositoryHelper(Func<Context, JsonArray> setSelector, InstantAPIsOptions.TableOptions<JsonObject, int> config)
+	public RepositoryHelper(Func<Context, JsonArray> setSelector, InstantAPIsOptions.TableOptions<JsonObject, int> config)
 	{
 		_setSelector = setSelector;
-		_config = config;
 	}
 
 	public Task<IEnumerable<JsonObject>> Get(HttpRequest request, Context context, string name, CancellationToken cancellationToken)
@@ -24,9 +21,9 @@ internal class JsonRepositoryHelper :
 	public Task<JsonObject?> GetById(HttpRequest request, Context context, string name, int id, CancellationToken cancellationToken)
 	{
 		var array = context.LoadTable(name);
-		var matchedItem = array.SingleOrDefault(row => (row ?? throw new Exception("No row found"))
+		var matchedItem = array.SingleOrDefault(row => row != null && row
 			.AsObject()
-			.Any(o => o.Key.ToLower() == "id" && o.Value?.ToString() == id.ToString())
+			.Any(o => o.Key.ToLower() == "id" && o.Value?.GetValue<int>() == id)
 		)?.AsObject();
 		return Task.FromResult(matchedItem);
 	}
@@ -36,8 +33,13 @@ internal class JsonRepositoryHelper :
 	{
 
 		var array = context.LoadTable(name);
-		var key = array.Count + 1;
-		newObj.AsObject().Add("Id", key.ToString());
+		var lastKey = array
+			.Select(row => row?.AsObject().FirstOrDefault(o => o.Key.ToLower() == "id").Value?.GetValue<int>())
+			.Select(x => x.GetValueOrDefault())
+			.Max();
+
+		var key = lastKey + 1;
+		newObj.AsObject().Add("id", key);
 		array.Add(newObj);
 		context.SaveChanges();
 
@@ -47,8 +49,25 @@ internal class JsonRepositoryHelper :
 	public Task Update(HttpRequest request, Context context, string name, int id, JsonObject newObj, CancellationToken cancellationToken)
 	{
 		var array = context.LoadTable(name);
-		array.Add(newObj);
-		context.SaveChanges();
+		var matchedItem = array.SingleOrDefault(row => row != null
+			&& row.AsObject().Any(o => o.Key.ToLower() == "id" && o.Value?.GetValue<int>() == id)
+		)?.AsObject();
+		if (matchedItem != null)
+		{
+			var updates = newObj
+				.GroupJoin(matchedItem, o => o.Key, i => i.Key, (o, i) => new { NewValue = o, OldValue = i.FirstOrDefault() })
+				.Where(x => x.NewValue.Key.ToLower() != "id")
+				.ToList();
+			foreach (var newField in updates)
+			{
+				if (newField.OldValue.Value != null)
+				{
+					matchedItem.Remove(newField.OldValue.Key);
+				}
+				matchedItem.Add(newField.NewValue.Key, JsonValue.Create(newField.NewValue.Value?.GetValue<string>()));
+			}
+			context.SaveChanges();
+		}
 
 		return Task.CompletedTask;
 	}
@@ -58,9 +77,9 @@ internal class JsonRepositoryHelper :
 		var array = context.LoadTable(name);
 		var matchedItem = array
 			.Select((value, index) => new { value, index })
-			.SingleOrDefault(row => (row.value ?? throw new Exception("No json value found"))
-				.AsObject()
-				.Any(o => o.Key.ToLower() == "id" && o.Value?.ToString() == id.ToString()));
+			.SingleOrDefault(row => row.value == null
+				? false
+				: row.value.AsObject().Any(o => o.Key.ToLower() == "id" && o.Value?.GetValue<int>() == id));
 		if (matchedItem != null)
 		{
 			array.RemoveAt(matchedItem.index);
@@ -69,4 +88,5 @@ internal class JsonRepositoryHelper :
 
 		return Task.FromResult(true);
 	}
+
 }
