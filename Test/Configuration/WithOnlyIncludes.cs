@@ -1,29 +1,10 @@
 ﻿using InstantAPIs;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Test.Configuration;
 
-public class WithOnlyIncludes : BaseFixture
+public class WithOnlyIncludes : InstantAPIsConfigBuilderFixture
 {
-
-	InstantAPIsConfigBuilder<MyContext> _Builder;
-
-	public WithOnlyIncludes()
-	{
-
-		var _ContextOptions = new DbContextOptionsBuilder<MyContext>()
-		.UseInMemoryDatabase("TestDb")
-		.Options;
-		_Builder = new(new(_ContextOptions));
-
-	}
 
 	[Fact]
 	public void ShouldNotIncludeAllTables()
@@ -32,12 +13,12 @@ public class WithOnlyIncludes : BaseFixture
 		// arrange
 
 		// act
-		_Builder.IncludeTable(db => db.Contacts);
+		_Builder.IncludeTable(db => db.Contacts, new InstantAPIsOptions.TableOptions<Contact, int>());
 		var config = _Builder.Build();
 
 		// assert
-		Assert.Single(config.Tables);
-		Assert.Equal("Contacts", config.Tables.First().Name);
+		Assert.Single(config);
+		Assert.Equal("Contacts", config.First().Name);
 
 	}
 
@@ -51,11 +32,11 @@ public class WithOnlyIncludes : BaseFixture
 		// arrange
 
 		// act
-		_Builder.IncludeTable(db => db.Contacts, methodsToGenerate);
+		_Builder.IncludeTable(db => db.Contacts, new InstantAPIsOptions.TableOptions<Contact, int>(), methodsToGenerate);
 		var config = _Builder.Build();
 
 		// assert
-		Assert.Equal(methodsToGenerate, config.Tables.First().ApiMethodsToGenerate);
+		Assert.Equal(methodsToGenerate, config.First().ApiMethodsToGenerate);
 
 	}
 
