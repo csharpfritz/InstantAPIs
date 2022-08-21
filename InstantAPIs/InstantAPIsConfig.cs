@@ -5,6 +5,10 @@ internal class InstantAPIsConfig
 
 	internal HashSet<WebApplicationExtensions.TypeTable> Tables { get; } = new HashSet<WebApplicationExtensions.TypeTable>();
 
+	internal List<string> PrimaryKeyMappingConventions { get; } = new List<string>() {
+		"{ClassName}Id", "{ClassName}_Id", "Id", "ID"
+	};
+
 }
 
 
@@ -17,7 +21,7 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 	private readonly HashSet<TableApiMapping> _IncludedTables = new();
 	private readonly List<string> _ExcludedTables = new();
 	private const string DEFAULT_URI = "/api/";
-
+	
 	public InstantAPIsConfigBuilder(D theContext)
 	{
 		this._TheContext = theContext;
@@ -125,6 +129,22 @@ public class InstantAPIsConfigBuilder<D> where D : DbContext
 	}
 
 #endregion
+
+	#region Primary Key Mapping Conventions
+
+	/// <summary>
+	/// Override the convention for determining primary keys of the entities. [Key] data annotation takes priority
+	/// </summary>
+	/// <param name="conventions">A list of conventions. You can use the string {ClassName} for the entity name. Ie: {ClassName}Id</param>
+	/// <returns>Configuration builder with this configuraiton applied</returns>
+	public InstantAPIsConfigBuilder<D> PrimaryKeyMappingConvention(List<string> conventions)
+	{
+		this._Config.PrimaryKeyMappingConventions.Clear();
+		this._Config.PrimaryKeyMappingConventions.AddRange(conventions);
+		return this;
+	}
+	
+	#endregion
 
 	internal InstantAPIsConfig Build()
 	{

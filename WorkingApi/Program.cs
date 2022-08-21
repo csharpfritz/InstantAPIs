@@ -16,6 +16,7 @@ var sw = Stopwatch.StartNew();
 app.MapInstantAPIs<MyContext>(config =>
 {
 	config.IncludeTable(db => db.Contacts, ApiMethodsToGenerate.All, "addressBook");
+	config.PrimaryKeyMappingConvention(new List<string>() { "{ClassName}Id", "{ClassName}_Id", });
 });
 
 app.Run();

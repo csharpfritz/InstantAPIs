@@ -14,7 +14,7 @@ public static class WebApplicationExtensions
 	
 	internal const string LOGGER_CATEGORY_NAME = "InstantAPI";
 
-	private static InstantAPIsConfig Configuration { get; set; } = new();
+	internal static InstantAPIsConfig Configuration { get; set; } = new();
 
 	public static IEndpointRouteBuilder MapInstantAPIs<D>(this IEndpointRouteBuilder app, Action<InstantAPIsConfigBuilder<D>> options = null) where D : DbContext
 	{
