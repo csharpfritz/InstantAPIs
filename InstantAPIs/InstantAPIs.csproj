@@ -15,7 +15,7 @@
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<DebugType>embedded</DebugType>
-		<Version>0.2.1</Version>
+		<Version>0.2.2</Version>
 	</PropertyGroup>
 
 
