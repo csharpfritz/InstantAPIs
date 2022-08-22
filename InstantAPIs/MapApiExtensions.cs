@@ -24,9 +24,24 @@ internal class MapApiExtensions
 		Logger = logger;
 
     var theType = typeof(C);
-		var idProp = theType.GetProperty("id", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) ?? theType.GetProperties().FirstOrDefault(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute)));
+    var keyName = $"{theType.Name}Id";
 
-		if (idProp != null)
+    // annotations will always override conventions....
+    var idProp = theType.GetProperties().FirstOrDefault(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute)));
+    if (idProp == null)
+    {
+	    foreach (var idName in WebApplicationExtensions.Configuration.PrimaryKeyMappingConventions)
+	    {
+		    if (idProp == null)
+		    {
+			    var propertyName = idName.Replace("{ClassName}", theType.Name);
+			    idProp = theType.GetProperty(propertyName,
+				    BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+		    }
+	    }
+    }
+
+    if (idProp != null)
 		{
 			_IdLookup.Add(theType, idProp);
 		}
