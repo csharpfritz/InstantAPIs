@@ -6,7 +6,7 @@ internal class InstantAPIsConfig
 	internal HashSet<WebApplicationExtensions.TypeTable> Tables { get; } = new HashSet<WebApplicationExtensions.TypeTable>();
 
 	internal List<string> PrimaryKeyMappingConventions { get; } = new List<string>() {
-		"{ClassName}Id", "{ClassName}_Id", "Id", "ID"
+		"{ClassName}Id", "{ClassName}_Id", "Id"
 	};
 
 }
