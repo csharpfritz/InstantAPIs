@@ -1,24 +1,9 @@
-﻿using InstantAPIs;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Xunit;
+﻿using Xunit;
 
 namespace Test.Configuration;
 
-public class WhenIncludeDoesNotSpecifyBaseUrl : BaseFixture
+public class WhenIncludeDoesNotSpecifyBaseUrl : InstantAPIsConfigBuilderFixture
 {
-
-	InstantAPIsConfigBuilder<MyContext> _Builder;
-
-	public WhenIncludeDoesNotSpecifyBaseUrl()
-	{
-
-		var _ContextOptions = new DbContextOptionsBuilder<MyContext>()
-		.UseInMemoryDatabase("TestDb")
-		.Options;
-		_Builder = new(new(_ContextOptions));
-
-	}
 
 	[Fact]
 	public void ShouldSpecifyDefaultUrl()
@@ -35,8 +20,4 @@ public class WhenIncludeDoesNotSpecifyBaseUrl : BaseFixture
 		Assert.Equal(new Uri("/api/Contacts", uriKind: UriKind.Relative), config.Tables.First().BaseUrl);
 
 	}
-
-
 }
-
-

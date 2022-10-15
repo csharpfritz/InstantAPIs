@@ -1,24 +1,10 @@
-﻿using InstantAPIs;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Xunit;
+﻿using Xunit;
 
 namespace Test.Configuration;
 
-public class WithIncludesAndExcludes : BaseFixture
+public class WithIncludesAndExcludes : InstantAPIsConfigBuilderFixture
 {
 
-	InstantAPIsConfigBuilder<MyContext> _Builder;
-
-	public WithIncludesAndExcludes()
-	{
-
-		var _ContextOptions = new DbContextOptionsBuilder<MyContext>()
-		.UseInMemoryDatabase("TestDb")
-		.Options;
-		_Builder = new(new(_ContextOptions));
-
-	}
 
 	[Fact]
 	public void ShouldExcludePreviouslyIncludedTable()
@@ -39,4 +25,3 @@ public class WithIncludesAndExcludes : BaseFixture
 	}
 
 }
-
